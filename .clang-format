@@ -1,9 +1,9 @@
 ﻿---
 Language:        Cpp
 # BasedOnStyle:  Microsoft
-AccessModifierOffset: -2
+AccessModifierOffset: -4
 AlignAfterOpenBracket: Align
-AlignConsecutiveMacros: None
+AlignConsecutiveMacros: Consecutive
 AlignConsecutiveAssignments: None
 AlignConsecutiveBitFields: None
 AlignConsecutiveDeclarations: None
@@ -106,7 +106,7 @@ JavaScriptWrapImports: true
 KeepEmptyLinesAtTheStartOfBlocks: true
 MacroBlockBegin: ''
 MacroBlockEnd:   ''
-MaxEmptyLinesToKeep: 1
+MaxEmptyLinesToKeep: 2
 NamespaceIndentation: None
 ObjCBinPackProtocolList: Auto
 ObjCBlockIndentWidth: 2
@@ -122,7 +122,7 @@ PenaltyBreakTemplateDeclaration: 10
 PenaltyExcessCharacter: 1000000
 PenaltyReturnTypeOnItsOwnLine: 1000
 PenaltyIndentedWhitespace: 0
-PointerAlignment: Right
+PointerAlignment: Left
 ReflowComments:  true
 SortIncludes:    true
 SortJavaStaticImport: Before
@@ -155,7 +155,7 @@ StatementMacros:
   - QT_REQUIRE_VERSION
 TabWidth:        4
 UseCRLF:         false
-UseTab:          Never
+UseTab:          AlignWithSpaces
 WhitespaceSensitiveMacros:
   - STRINGIZE
   - PP_STRINGIZE
