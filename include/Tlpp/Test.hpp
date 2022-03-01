@@ -8,7 +8,7 @@
 	void CONCAT(test_method_, NAME)();                                                                                 \
 	struct CONCAT(test_class_, NAME)                                                                                   \
 	{                                                                                                                  \
-		CONCAT(test_class_, name)()                                                                                    \
+		CONCAT(test_class_, NAME)()                                                                                    \
 		{                                                                                                              \
 			printf_s("----------- TEST ");                                                                             \
 			printf_s(QUOTE(NAME));                                                                                     \
