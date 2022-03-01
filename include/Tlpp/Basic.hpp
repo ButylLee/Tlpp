@@ -1,0 +1,4 @@
+#ifndef TLPP_BASIC_HPP
+#define TLPP_BASIC_HPP
+
+#endif // TLPP_BASIC_HPP
