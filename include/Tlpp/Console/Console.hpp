@@ -1,8 +1,8 @@
 ﻿#ifndef TLPP_CONSOLE_HPP
 #define TLPP_CONSOLE_HPP
 
-#include "../Config.h"
-#include "Basic.hpp"
+#include <Tlpp/Config.h>
+#include <Tlpp/Basic.hpp>
 
 namespace tl
 {

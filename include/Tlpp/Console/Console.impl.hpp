@@ -1,8 +1,8 @@
 ﻿#ifndef TLPP_CONSOLE_IMPL_HPP
 #define TLPP_CONSOLE_IMPL_HPP
 
-#include "../Exception.hpp"
-#include "Config.h"
+#include <Tlpp/Exception.hpp>
+#include <Tlpp/Config.h>
 #include <string> //TODO:remove
 
 #ifdef TLPP_WIN

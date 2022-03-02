@@ -1,8 +1,8 @@
 ﻿#ifndef TLPP_TEST_HPP
 #define TLPP_TEST_HPP
 
-#include "../Macro.h"
-#include "Error.hpp"
+#include <Tlpp/Macro.h>
+#include <Tlpp/Test/Error.hpp>
 #include <stdio.h>
 // TODO:TEST_ASSERT & TEST_CHECK that throw Error
 namespace tl

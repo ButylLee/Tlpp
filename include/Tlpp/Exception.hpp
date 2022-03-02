@@ -1,8 +1,9 @@
 ﻿#ifndef TLPP_EXCEPTION_HPP
 #define TLPP_EXCEPTION_HPP
 
-#include "Basic.hpp"
-#include "Config.h"
+#include <Tlpp/Basic.hpp>
+#include <Tlpp/Config.h>
+
 #include <string>  //TODO:remove
 #include <utility> //TODO:remove
 
@@ -77,14 +78,15 @@ namespace tl
 	private:
 		bool format() noexcept
 		{
-			return static_cast<bool>(FormatMessageW(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
-			                                            FORMAT_MESSAGE_IGNORE_INSERTS,
-			                                        NULL,
-			                                        code,
-			                                        LANG_USER_DEFAULT,
-			                                        (LPWSTR)&buffer,
-			                                        0,
-			                                        NULL));
+			return static_cast<bool>(FormatMessageW(
+				FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM |
+					FORMAT_MESSAGE_IGNORE_INSERTS,
+				NULL,
+				code,
+				LANG_USER_DEFAULT,
+				(LPWSTR)&buffer,
+				0,
+				NULL));
 		}
 		void rebuild(CodeType error_code) noexcept
 		{
