@@ -12,6 +12,12 @@ namespace tl
 		NotCopyable& operator=(const NotCopyable&) = delete;
 	};
 
+	class Statical
+	{
+	protected:
+		Statical() = delete;
+	};
+
 	class Object
 	{
 	public:
