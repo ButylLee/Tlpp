@@ -1,0 +1,6 @@
+﻿#ifndef TLPP_UTILITY_MOVE_HPP
+#define TLPP_UTILITY_MOVE_HPP
+
+//TODO
+
+#endif // TLPP_UTILITY_MOVE_HPP
