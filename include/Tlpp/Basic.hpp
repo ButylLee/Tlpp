@@ -1,25 +1,29 @@
-#ifndef TLPP_BASIC_HPP
+﻿#ifndef TLPP_BASIC_HPP
 #define TLPP_BASIC_HPP
 
-class NotCopyable
+namespace tl
 {
-protected:
-	NotCopyable() = default;
-	~NotCopyable() = default;
-	NotCopyable(const NotCopyable&) = delete;
-	NotCopyable& operator=(const NotCopyable&) = delete;
-};
+	class NotCopyable
+	{
+	protected:
+		NotCopyable() = default;
+		~NotCopyable() = default;
+		NotCopyable(const NotCopyable&) = delete;
+		NotCopyable& operator=(const NotCopyable&) = delete;
+	};
 
-class Object
-{
-public:
-	virtual ~Object() = default;
-};
+	class Object
+	{
+	public:
+		virtual ~Object() = default;
+	};
 
-class Interface : NotCopyable
-{
-public:
-	virtual ~Interface() = default;
-};
+	class Interface : NotCopyable
+	{
+	public:
+		virtual ~Interface() = default;
+	};
+
+} // namespace tl
 
 #endif // TLPP_BASIC_HPP
