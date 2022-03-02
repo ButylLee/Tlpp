@@ -1,6 +1,7 @@
 ﻿#ifndef TLPP_CONSOLE_HPP
 #define TLPP_CONSOLE_HPP
 
+#include "../Config.h"
 #include "Basic.hpp"
 
 namespace tl
@@ -9,13 +10,20 @@ namespace tl
 	{
 		class Console : Statical
 		{
-			static void Write(const char* string);
-			static void WriteLine(const char* string);
+			static void Write(const wchar_t* string);
+			static void WriteLine(const wchar_t* string);
 
 			static void Read();
 
-			static void SetTitle();
-			static void SetColor();
+			static void SetTitle(const std::wstring& title);
+			static void SetColor(bool red, bool green, bool blue, bool light);
+			static void SetCursorVisible(bool isVisible);
+
+#ifdef TLPP_WIN
+			static HANDLE GetOutputHandle() noexcept;
+			static HANDLE GetInputHandle() noexcept;
+			static HWND GetConsoleHandle() noexcept;
+#endif
 		};
 
 	} // namespace console
