@@ -1,3 +1,5 @@
 # TODO
 
-create CMakeLists.txt
+- impl Console
+- impl Test
+- complete CMakeLists.txt
