@@ -2,7 +2,7 @@
 #define TLPP_TYPE_TRAITS_ARRAY_TRAITS_HPP
 
 #include <Tlpp/TypeTraits/integral_constant.hpp>
-// prevent include basic_traits.hpp
+
 #ifndef TLPP_MSVC
 #include <cstddef>
 #endif
@@ -44,6 +44,27 @@ namespace tl
 
 		template<typename T>
 		using remove_extent_t = typename remove_extent<T>::type;
+
+		template<typename T>
+		struct remove_all_extents
+		{
+			using type = T;
+		};
+
+		template<typename T>
+		struct remove_all_extents<T[]>
+		{
+			using type = remove_all_extents<T>::type;
+		};
+
+		template<typename T, size_t N>
+		struct remove_all_extents<T[N]>
+		{
+			using type = remove_all_extents<T>::type;
+		};
+
+		template<typename T>
+		using remove_all_extents_t = typename remove_all_extents<T>::type;
 
 	} // namespace type_traits
 } // namespace tl
