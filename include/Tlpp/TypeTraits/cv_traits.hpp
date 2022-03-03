@@ -7,7 +7,7 @@ namespace tl
 {
 	namespace type_traits
 	{
-		template<typename T>
+		template<typename>
 		inline constexpr bool is_const_v = false;
 
 		template<typename T>
@@ -17,7 +17,7 @@ namespace tl
 		struct is_const : bool_constant<is_const_v<T>>
 		{};
 
-		template<typename T>
+		template<typename>
 		inline constexpr bool is_volatile_v = false;
 
 		template<typename T>

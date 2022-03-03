@@ -8,5 +8,7 @@
 #include <Tlpp/TypeTraits/pointer_traits.hpp>
 #include <Tlpp/TypeTraits/ref_traits.hpp>
 #include <Tlpp/TypeTraits/sign_traits.hpp>
+#include <Tlpp/TypeTraits/type_relationships.hpp>
+#include <Tlpp/TypeTraits/void_t.hpp>
 
 #endif // TLPP_TYPE_TRAITS_HPP
