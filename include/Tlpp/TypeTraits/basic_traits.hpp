@@ -2,14 +2,12 @@
 #define TLPP_TYPE_TRAITS_BASIC_TRAITS_HPP
 
 #include <Tlpp/Config.h>
+#include <Tlpp/TypeTraits/array_traits.hpp>
 #include <Tlpp/TypeTraits/cv_traits.hpp>
 #include <Tlpp/TypeTraits/integral_constant.hpp>
+#include <Tlpp/TypeTraits/pointer_traits.hpp>
 #include <Tlpp/TypeTraits/ref_traits.hpp>
 #include <Tlpp/TypeTraits/type_relationships.hpp>
-
-#ifndef TLPP_MSVC
-#include <cstddef>
-#endif
 
 namespace tl
 {
@@ -62,19 +60,6 @@ namespace tl
 		struct is_floating_point : bool_constant<is_floating_point_v<T>>
 		{};
 
-		template<typename T>
-		inline constexpr bool is_array_v = false;
-
-		template<typename T>
-		inline constexpr bool is_array_v<T[]> = true;
-
-		template<typename T, size_t N>
-		inline constexpr bool is_array_v<T[N]> = true;
-
-		template<typename T>
-		struct is_array : bool_constant<is_array_v<T>>
-		{};
-
 #if defined TLPP_MSVC || defined TLPP_GCC || defined TLPP_CLANG
 		template<typename T>
 		inline constexpr bool is_union_v = __is_union(T);
@@ -91,7 +76,17 @@ namespace tl
 		template<typename T>
 		inline constexpr bool is_class_v = __is_class(T);
 #else
-				   // TODO
+		namespace detail
+		{
+			template<typename>
+			inline constexpr bool is_class_impl = false;
+			template<typename T>
+			inline constexpr bool is_class_impl<int T::*> = true;
+		} // namespace detail
+
+		template<typename T>
+		inline constexpr bool is_class_v =
+			detail::is_class_impl<T> && !is_union_v<T>;
 #endif
 		template<typename T>
 		struct is_class : bool_constant<is_class_v<T>>
@@ -109,7 +104,12 @@ namespace tl
 		template<typename T>
 		inline constexpr bool is_enum_v = __is_enum(T);
 #else
-				   // TODO
+		template<typename T>
+		inline constexpr bool is_enum_v =
+			!(is_void_v<T> || is_integral_v<T> || is_floating_point_v<T> ||
+		      is_array_v<T> || is_pointer_v<T> || is_member_pointer_v<T> ||
+		      is_union_v<T> || is_function_v<T> || is_reference_v<T> ||
+		      is_class_v<T>);
 #endif
 		template<typename T>
 		struct is_enum : bool_constant<is_enum_v<T>>
