@@ -1,7 +1,7 @@
 # TODO
 
+- impl is_member_pointer
 - impl Console
-- impl utility->std::move
 - impl Test
 - impl string
 - complete CMakeLists.txt
