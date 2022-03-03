@@ -1,6 +1,7 @@
 ﻿#ifndef TLPP_TYPE_TRAITS_POINTER_TRAITS_HPP
 #define TLPP_TYPE_TRAITS_POINTER_TRAITS_HPP
 
+#include <Tlpp/Config.h>
 #include <Tlpp/TypeTraits/cv_traits.hpp>
 #include <Tlpp/TypeTraits/integral_constant.hpp>
 #include <Tlpp/TypeTraits/ref_traits.hpp>
@@ -76,6 +77,66 @@ namespace tl
 
 		template<typename T>
 		using remove_pointer_t = typename remove_pointer<T>::type;
+
+		namespace detail
+		{
+			template<typename T>
+			struct is_member_pointer_impl
+			{
+				static constexpr bool is_member = false;
+				static constexpr bool is_func = false;
+				static constexpr bool is_object = false;
+			};
+
+			template<typename T, typename C>
+			struct is_member_pointer_impl<T C::*>
+			{
+				static constexpr bool is_member = true;
+				static constexpr bool is_func = is_function_v<T>;
+				static constexpr bool is_object = !is_func;
+			};
+
+		} // namespace detail
+
+#ifdef TLPP_CLANG
+		template<typename T>
+		inline constexpr bool
+			is_member_object_pointer_v = __is_member_object_pointer(T);
+#else
+		template<typename T>
+		inline constexpr bool is_member_object_pointer_v =
+			detail::is_member_pointer_impl<remove_cv_t<T>>::is_object
+#endif
+		template<typename T>
+		struct is_member_object_pointer
+			: bool_constant<is_member_object_pointer_v<T>>
+		{};
+
+#ifdef TLPP_CLANG
+		template<typename T>
+		inline constexpr bool
+			is_member_function_pointer_v = __is_member_function_pointer(T);
+#else
+		template<typename T>
+		inline constexpr bool is_member_function_pointer_v =
+			detail::is_member_pointer_impl<remove_cv_t<T>>::is_func;
+#endif
+		template<typename T>
+		struct is_member_function_pointer
+			: bool_constant<is_member_function_pointer_v<T>>
+		{};
+
+#ifdef TLPP_CLANG
+		template<typename T>
+		inline constexpr bool is_member_pointer_v = __is_member_pointer(T);
+#else
+		template<typename T>
+		inline constexpr bool is_member_pointer_v =
+			detail::is_member_pointer_impl<remove_cv_t<T>>::is_member;
+#endif
+		template<typename T>
+		struct is_member_pointer : bool_constant<is_member_pointer_v<T>>
+		{};
 
 	} // namespace type_traits
 } // namespace tl
