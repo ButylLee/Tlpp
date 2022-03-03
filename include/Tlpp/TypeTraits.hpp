@@ -2,6 +2,8 @@
 #define TLPP_TYPE_TRAITS_HPP
 
 #include <Tlpp/TypeTraits/array_traits.hpp>
+#include <Tlpp/TypeTraits/basic_traits.hpp>
+#include <Tlpp/TypeTraits/composite_traits.hpp>
 #include <Tlpp/TypeTraits/conditional.hpp>
 #include <Tlpp/TypeTraits/cv_traits.hpp>
 #include <Tlpp/TypeTraits/decay.hpp>

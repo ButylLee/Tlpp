@@ -69,8 +69,10 @@ namespace tl
 		} // namespace detail
 
 		template<typename T>
-		struct remove_pointer : detail::try_remove_pointer<remove_cv_t<T>>
-		{};
+		struct remove_pointer
+		{
+			using type = detail::try_remove_pointer<remove_cv_t<T>>::type;
+		};
 
 		template<typename T>
 		using remove_pointer_t = typename remove_pointer<T>::type;

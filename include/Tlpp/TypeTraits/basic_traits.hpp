@@ -4,6 +4,7 @@
 #include <Tlpp/Config.h>
 #include <Tlpp/TypeTraits/cv_traits.hpp>
 #include <Tlpp/TypeTraits/integral_constant.hpp>
+#include <Tlpp/TypeTraits/ref_traits.hpp>
 #include <Tlpp/TypeTraits/type_relationships.hpp>
 
 #ifndef TLPP_MSVC
@@ -72,6 +73,46 @@ namespace tl
 
 		template<typename T>
 		struct is_array : bool_constant<is_array_v<T>>
+		{};
+
+#if defined TLPP_MSVC || defined TLPP_GCC || defined TLPP_CLANG
+		template<typename T>
+		inline constexpr bool is_union_v = __is_union(T);
+#else
+		template<typename T>
+		inline constexpr bool is_union_v =
+			false; // always false if not supprt builtin __is_union
+#endif
+		template<typename T>
+		struct is_union : bool_constant<is_union_v<T>>
+		{};
+
+#if defined TLPP_MSVC || defined TLPP_GCC || defined TLPP_CLANG
+		template<typename T>
+		inline constexpr bool is_class_v = __is_class(T);
+#else
+				   // TODO
+#endif
+		template<typename T>
+		struct is_class : bool_constant<is_class_v<T>>
+		{};
+
+		template<typename T>
+		inline constexpr bool is_function_v =
+			!is_const_v<add_const_t<T>> && !is_reference_v<T>;
+
+		template<typename T>
+		struct is_function : bool_constant<is_function_v<T>>
+		{};
+
+#if defined TLPP_MSVC || defined TLPP_GCC || defined TLPP_CLANG
+		template<typename T>
+		inline constexpr bool is_enum_v = __is_enum(T);
+#else
+				   // TODO
+#endif
+		template<typename T>
+		struct is_enum : bool_constant<is_enum_v<T>>
 		{};
 
 	} // namespace type_traits
