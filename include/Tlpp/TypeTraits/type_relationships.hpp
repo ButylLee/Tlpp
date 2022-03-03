@@ -17,6 +17,12 @@ namespace tl
 		struct is_same : bool_constant<is_same_v<T, U>>
 		{};
 
+		namespace detail
+		{
+			template<typename T, typename... Ts>
+			inline constexpr bool is_any_of_v = (is_same_v<T, Ts> || ...);
+		}
+
 	} // namespace type_traits
 } // namespace tl
 

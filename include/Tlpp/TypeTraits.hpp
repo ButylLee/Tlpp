@@ -2,7 +2,9 @@
 #define TLPP_TYPE_TRAITS_HPP
 
 #include <Tlpp/TypeTraits/array_traits.hpp>
+#include <Tlpp/TypeTraits/conditional.hpp>
 #include <Tlpp/TypeTraits/cv_traits.hpp>
+#include <Tlpp/TypeTraits/decay.hpp>
 #include <Tlpp/TypeTraits/enable_if.hpp>
 #include <Tlpp/TypeTraits/integral_constant.hpp>
 #include <Tlpp/TypeTraits/pointer_traits.hpp>

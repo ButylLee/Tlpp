@@ -1,7 +1,8 @@
 ﻿#ifndef TLPP_UTILITY_HPP
 #define TLPP_UTILITY_HPP
 
-#include <Tlpp/Utility/addressof.hpp>
-#include <Tlpp/Utility/move.hpp>
+#include <Tlpp/Utility/AddressOf.hpp>
+#include <Tlpp/Utility/ForwardValue.hpp>
+#include <Tlpp/Utility/MoveValue.hpp>
 
 #endif // TLPP_UTILITY_HPP
