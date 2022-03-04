@@ -5,6 +5,7 @@
 #include <Tlpp/TypeTraits/cv_traits.hpp>
 #include <Tlpp/TypeTraits/integral_constant.hpp>
 #include <Tlpp/TypeTraits/pointer_traits.hpp>
+#include <Tlpp/TypeTraits/type_relationships.hpp>
 
 namespace tl
 {
@@ -49,6 +50,13 @@ namespace tl
 		template<typename T>
 		struct is_compound : bool_constant<is_compound_v<T>>
 		{};
+
+		namespace detail
+		{
+			template<typename T>
+			inline constexpr bool is_integral_except_bool_v =
+				is_integral_v<T> && !is_same_v<remove_cv_t<T>, bool>;
+		}
 
 	} // namespace type_traits
 } // namespace tl

@@ -2,7 +2,9 @@
 #define TLPP_TYPE_TRAITS_SIGN_TRAITS_HPP
 
 #include <Tlpp/Config.h>
+#include <Tlpp/TypeTraits/basic_traits.hpp>
 #include <Tlpp/TypeTraits/composite_traits.hpp>
+#include <Tlpp/TypeTraits/conditional.hpp>
 #include <Tlpp/TypeTraits/cv_traits.hpp>
 #include <Tlpp/TypeTraits/integral_constant.hpp>
 
@@ -49,6 +51,24 @@ namespace tl
 		template<typename T>
 		struct is_unsigned : bool_constant<is_unsigned_v<T>>
 		{};
+
+		namespace detail
+		{
+
+		} // namespace detail
+
+		template<typename T>
+		struct make_signed
+		{
+			static_assert(detail::is_integral_except_bool_v<T> || is_enum_v<T>,
+			              "make_signed<T> requires an integral type except "
+			              "bool or an enum type which may cv-qualified.");
+			using type =
+				detail::copy_cv_t<T, detail::make_signed_impl<T>::type>;
+		};
+
+		template<typename T>
+		using make_signed_t = make_signed<T>::type;
 
 	} // namespace type_traits
 } // namespace tl

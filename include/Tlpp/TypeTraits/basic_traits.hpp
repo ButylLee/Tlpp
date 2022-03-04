@@ -52,6 +52,17 @@ namespace tl
 		struct is_integral : bool_constant<is_integral_v<T>>
 		{};
 
+		namespace detail
+		{
+			template<typename T>
+			inline constexpr bool is_char_type_v = is_any_of_v<remove_cv_t<T>,
+			                                                   char,
+			                                                   wchar_t,
+			                                                   char8_t,
+			                                                   char16_t,
+			                                                   char32_t>;
+		}
+
 		template<typename T>
 		inline constexpr bool is_floating_point_v =
 			detail::is_any_of_v<remove_cv_t<T>, float, double, long double>;
