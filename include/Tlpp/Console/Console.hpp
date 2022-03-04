@@ -1,8 +1,10 @@
 ﻿#ifndef TLPP_CONSOLE_HPP
 #define TLPP_CONSOLE_HPP
 
-#include <Tlpp/Config.h>
 #include <Tlpp/Basic.hpp>
+#include <Tlpp/Config.h>
+
+#include <string> //TODO:remove
 
 namespace tl
 {
@@ -13,7 +15,7 @@ namespace tl
 			static void Write(const wchar_t* string);
 			static void WriteLine(const wchar_t* string);
 
-			static void Read();
+			static std::wstring Read();
 
 			static void SetTitle(const std::wstring& title);
 			static void SetColor(bool red, bool green, bool blue, bool light);

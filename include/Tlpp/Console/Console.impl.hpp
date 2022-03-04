@@ -3,7 +3,6 @@
 
 #include <Tlpp/Exception.hpp>
 #include <Tlpp/Config.h>
-#include <string> //TODO:remove
 
 #ifdef TLPP_WIN
 #include <Windows.h>
@@ -21,7 +20,7 @@ namespace tl
 		inline void Console::WriteLine(const wchar_t* string)
 		{}
 
-		inline void Console::Read()
+		inline std::wstring Console::Read()
 		{}
 
 		inline void Console::SetTitle(const std::wstring& title)

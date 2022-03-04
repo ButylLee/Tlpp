@@ -1,9 +1,10 @@
 ﻿#ifndef TLPP_TEST_HPP
 #define TLPP_TEST_HPP
 
+#include <Tlpp/Basic.hpp>
 #include <Tlpp/Macro.h>
-#include <Tlpp/Test/Error.hpp>
-#include <stdio.h>
+
+#include <cstdio>
 // TODO:TEST_ASSERT & TEST_CHECK that throw Error
 namespace tl
 {
@@ -23,20 +24,21 @@ namespace tl
 		};
 
 
-#define TEST(NAME)                                                                  \
-	void CONCAT(test_case_method_, NAME)();                                         \
-	struct CONCAT(test_case_class_, NAME)                                           \
-	{                                                                               \
-		CONCAT(test_case_class_, NAME)()                                            \
-		{                                                                           \
-			::tl::test::Test::RegisterTestCase(&CONCAT(test_case_method_, NAME));   \
-			printf_s("----------- TEST ");                                          \
-			printf_s(QUOTE(NAME));                                                  \
-			printf_s(" -----------\n");                                             \
-			CONCAT(test_case_method_, NAME)();                                      \
-			printf_s("\n");                                                         \
-		}                                                                           \
-	} CONCAT(test_case_object_, NAME);                                              \
+#define TEST(NAME)                                                             \
+	void CONCAT(test_case_method_, NAME)();                                    \
+	struct CONCAT(test_case_class_, NAME)                                      \
+	{                                                                          \
+		CONCAT(test_case_class_, NAME)()                                       \
+		{                                                                      \
+			::tl::test::Test::RegisterTestCase(                                \
+				&CONCAT(test_case_method_, NAME));                             \
+			printf_s("----------- TEST ");                                     \
+			printf_s(QUOTE(NAME));                                             \
+			printf_s(" -----------\n");                                        \
+			CONCAT(test_case_method_, NAME)();                                 \
+			printf_s("\n");                                                    \
+		}                                                                      \
+	} CONCAT(test_case_object_, NAME);                                         \
 	void CONCAT(test_case_method_, NAME)()
 
 	} // namespace test

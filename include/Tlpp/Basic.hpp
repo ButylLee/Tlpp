@@ -64,6 +64,24 @@ namespace tl
 		virtual ~Interface() = default;
 	};
 
+	class Error
+	{
+	public:
+		Error() = default;
+
+		Error(const wchar_t* message_) noexcept
+			: message(message_)
+		{}
+
+		[[nodiscard]] const wchar_t* what() const noexcept
+		{
+			return message;
+		}
+
+	private:
+		const wchar_t* message = nullptr;
+	};
+
 } // namespace tl
 
 #endif // TLPP_BASIC_HPP
