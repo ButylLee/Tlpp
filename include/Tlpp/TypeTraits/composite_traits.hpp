@@ -51,13 +51,6 @@ namespace tl
 		struct is_compound : bool_constant<is_compound_v<T>>
 		{};
 
-		namespace detail
-		{
-			template<typename T>
-			inline constexpr bool is_integral_except_bool_v =
-				is_integral_v<T> && !is_same_v<remove_cv_t<T>, bool>;
-		}
-
 	} // namespace type_traits
 } // namespace tl
 

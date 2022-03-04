@@ -55,12 +55,8 @@ namespace tl
 		namespace detail
 		{
 			template<typename T>
-			inline constexpr bool is_char_type_v = is_any_of_v<remove_cv_t<T>,
-			                                                   char,
-			                                                   wchar_t,
-			                                                   char8_t,
-			                                                   char16_t,
-			                                                   char32_t>;
+			inline constexpr bool is_integral_except_bool_v =
+				is_integral_v<T> && !is_same_v<remove_cv_t<T>, bool>;
 		}
 
 		template<typename T>

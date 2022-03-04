@@ -8,6 +8,10 @@
 #include <Tlpp/TypeTraits/cv_traits.hpp>
 #include <Tlpp/TypeTraits/integral_constant.hpp>
 
+#ifndef TLPP_MSVC
+#include <cstddef>
+#endif
+
 namespace tl
 {
 	namespace type_traits
@@ -54,6 +58,95 @@ namespace tl
 
 		namespace detail
 		{
+			template<size_t S, typename T, typename... Ts>
+			struct apply_first_type_of_size
+			{
+				using type =
+					conditional_t<sizeof(T) < S,
+				                  apply_first_type_of_size<S, Ts...>::type,
+				                  T>;
+			};
+
+			template<size_t S, typename T>
+			struct apply_first_type_of_size<S, T>
+			{
+				using type = T;
+			};
+
+			template<typename T,
+			         bool = is_integral_except_bool_v<T> || is_enum_v<T>>
+			struct make_signed_impl;
+
+			template<typename T>
+			struct make_signed_impl<T, true>
+			{
+				using type = apply_first_type_of_size<sizeof(T),
+				                                      signed char,
+				                                      signed short,
+				                                      signed int,
+				                                      signed long,
+				                                      signed long long>::type;
+			};
+
+			template<>
+			struct make_signed_impl<signed char, true>
+			{
+				using type = signed char;
+			};
+
+			template<>
+			struct make_signed_impl<unsigned char, true>
+			{
+				using type = signed char;
+			};
+
+			template<>
+			struct make_signed_impl<signed short, true>
+			{
+				using type = signed short;
+			};
+
+			template<>
+			struct make_signed_impl<unsigned short, true>
+			{
+				using type = signed short;
+			};
+
+			template<>
+			struct make_signed_impl<signed int, true>
+			{
+				using type = signed int;
+			};
+
+			template<>
+			struct make_signed_impl<unsigned int, true>
+			{
+				using type = signed int;
+			};
+
+			template<>
+			struct make_signed_impl<signed long, true>
+			{
+				using type = signed long;
+			};
+
+			template<>
+			struct make_signed_impl<unsigned long, true>
+			{
+				using type = signed long;
+			};
+
+			template<>
+			struct make_signed_impl<signed long long, true>
+			{
+				using type = signed long long;
+			};
+
+			template<>
+			struct make_signed_impl<unsigned long long, true>
+			{
+				using type = signed long long;
+			};
 
 		} // namespace detail
 
@@ -63,8 +156,8 @@ namespace tl
 			static_assert(detail::is_integral_except_bool_v<T> || is_enum_v<T>,
 			              "make_signed<T> requires an integral type except "
 			              "bool or an enum type which may cv-qualified.");
-			using type =
-				detail::copy_cv_t<T, detail::make_signed_impl<T>::type>;
+			using type = detail::
+				copy_cv_t<T, detail::make_signed_impl<remove_cv_t<T>>::type>;
 		};
 
 		template<typename T>
