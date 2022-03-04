@@ -1,6 +1,7 @@
 ﻿#ifndef TLPP_TYPE_TRAITS_ARRAY_TRAITS_HPP
 #define TLPP_TYPE_TRAITS_ARRAY_TRAITS_HPP
 
+#include <Tlpp/Config.h>
 #include <Tlpp/TypeTraits/integral_constant.hpp>
 
 #ifndef TLPP_MSVC
@@ -22,6 +23,38 @@ namespace tl
 
 		template<typename T>
 		struct is_array : bool_constant<is_array_v<T>>
+		{};
+
+		template<typename T>
+		inline constexpr size_t rank_v = 0;
+
+		template<typename T>
+		inline constexpr size_t rank_v<T[]> = rank_v<T> + 1;
+
+		template<typename T, size_t N>
+		inline constexpr size_t rank_v<T[N]> = rank_v<T> + 1;
+
+		template<typename T>
+		struct rank : integral_constant<size_t, rank_v<T>>
+		{};
+
+		template<typename T, unsigned N = 0>
+		inline constexpr size_t extent_v = 0;
+
+		template<typename T>
+		inline constexpr size_t extent_v<T[], 0> = 0;
+
+		template<typename T, unsigned N>
+		inline constexpr size_t extent_v<T[], N> = extent_v<T, N - 1>;
+
+		template<typename T, size_t I>
+		inline constexpr size_t extent_v<T[I], 0> = I;
+
+		template<typename T, size_t I, unsigned N>
+		inline constexpr size_t extent_v<T[I], N> = extent_v<T, N - 1>;
+
+		template<typename T, unsigned N = 0>
+		struct extent : integral_constant<size_t, extent_v<T, N>>
 		{};
 
 		template<typename T>
