@@ -3,6 +3,7 @@
 
 #include <Tlpp/Utility/AddressOf.hpp>
 #include <Tlpp/Utility/AsConst.hpp>
+#include <Tlpp/Utility/DeclVal.hpp>
 #include <Tlpp/Utility/ForwardValue.hpp>
 #include <Tlpp/Utility/MoveValue.hpp>
 
