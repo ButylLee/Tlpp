@@ -111,6 +111,34 @@ namespace tl
 		template<typename T>
 		using remove_cv_t = typename remove_cv<T>::type;
 
+		namespace detail
+		{
+			template<typename From, typename To>
+			struct copy_cv
+			{
+				using type = To;
+			};
+
+			template<typename From, typename To>
+			struct copy_cv<const From, To>
+			{
+				using type = const To;
+			};
+
+			template<typename From, typename To>
+			struct copy_cv<volatile From, To>
+			{
+				using type = volatile To;
+			};
+
+			template<typename From, typename To>
+			struct copy_cv<const volatile From, To>
+			{
+				using type = const volatile To;
+			};
+
+		} // namespace detail
+
 	} // namespace type_traits
 } // namespace tl
 

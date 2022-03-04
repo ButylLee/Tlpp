@@ -3,9 +3,9 @@
 
 #include <Tlpp/Basic.hpp>
 #include <Tlpp/Config.h>
+#include <Tlpp/Utility/MoveValue.hpp>
 
-#include <string>  //TODO:remove
-#include <utility> //TODO:remove
+#include <string> //TODO:remove
 
 #ifdef TLPP_WIN
 #include <Windows.h>
@@ -23,7 +23,7 @@ namespace tl
 	{
 	public:
 		explicit RuntimeException(std::wstring message) noexcept
-			: buffer(std::move(message))
+			: buffer(tl::MoveValue(message))
 		{}
 
 		[[nodiscard]] const wchar_t* what() const noexcept override
