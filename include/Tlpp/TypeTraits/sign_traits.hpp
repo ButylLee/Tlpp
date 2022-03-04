@@ -148,6 +148,81 @@ namespace tl
 				using type = signed long long;
 			};
 
+			template<typename T,
+			         bool = is_integral_except_bool_v<T> || is_enum_v<T>>
+			struct make_unsigned_impl;
+
+			template<typename T>
+			struct make_unsigned_impl<T, true>
+			{
+				using type = apply_first_type_of_size<sizeof(T),
+				                                      unsigned char,
+				                                      unsigned short,
+				                                      unsigned int,
+				                                      unsigned long,
+				                                      unsigned long long>::type;
+			};
+
+			template<>
+			struct make_unsigned_impl<signed char, true>
+			{
+				using type = unsigned char;
+			};
+
+			template<>
+			struct make_unsigned_impl<unsigned char, true>
+			{
+				using type = unsigned char;
+			};
+
+			template<>
+			struct make_unsigned_impl<signed short, true>
+			{
+				using type = unsigned short;
+			};
+
+			template<>
+			struct make_unsigned_impl<unsigned short, true>
+			{
+				using type = unsigned short;
+			};
+
+			template<>
+			struct make_unsigned_impl<signed int, true>
+			{
+				using type = unsigned int;
+			};
+
+			template<>
+			struct make_unsigned_impl<unsigned int, true>
+			{
+				using type = unsigned int;
+			};
+
+			template<>
+			struct make_unsigned_impl<signed long, true>
+			{
+				using type = unsigned long;
+			};
+
+			template<>
+			struct make_unsigned_impl<unsigned long, true>
+			{
+				using type = unsigned long;
+			};
+
+			template<>
+			struct make_unsigned_impl<signed long long, true>
+			{
+				using type = unsigned long long;
+			};
+
+			template<>
+			struct make_unsigned_impl<unsigned long long, true>
+			{
+				using type = unsigned long long;
+			};
+
 		} // namespace detail
 
 		template<typename T>
@@ -162,6 +237,19 @@ namespace tl
 
 		template<typename T>
 		using make_signed_t = make_signed<T>::type;
+
+		template<typename T>
+		struct make_unsigned
+		{
+			static_assert(detail::is_integral_except_bool_v<T> || is_enum_v<T>,
+			              "make_signed<T> requires an integral type except "
+			              "bool or an enum type which may cv-qualified.");
+			using type = detail::
+				copy_cv_t<T, detail::make_unsigned_impl<remove_cv_t<T>>::type>;
+		};
+
+		template<typename T>
+		using make_unsigned_t = make_unsigned<T>::type;
 
 	} // namespace type_traits
 } // namespace tl
