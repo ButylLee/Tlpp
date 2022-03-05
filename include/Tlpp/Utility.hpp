@@ -6,5 +6,6 @@
 #include <Tlpp/Utility/DeclVal.hpp>
 #include <Tlpp/Utility/ForwardValue.hpp>
 #include <Tlpp/Utility/MoveValue.hpp>
+#include <Tlpp/Utility/ScopeGuard.hpp>
 
 #endif // TLPP_UTILITY_HPP
