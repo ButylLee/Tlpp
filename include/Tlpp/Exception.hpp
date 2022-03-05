@@ -23,10 +23,6 @@ namespace tl
 	class RuntimeException : public Exception
 	{
 	public:
-		explicit RuntimeException(const wchar_t* message) noexcept
-			: buffer(message)
-		{}
-
 		explicit RuntimeException(std::wstring message) noexcept
 			: buffer(tl::MoveValue(message))
 		{}
@@ -47,12 +43,17 @@ namespace tl
 		using CodeType = decltype(GetLastError());
 
 		explicit Win32Exception(CodeType error_code = GetLastError()) noexcept
-			: RuntimeException(format(error_code))
+			: Win32Exception("", error_code)
+		{}
+
+		explicit Win32Exception(std::wstring message,
+		                        CodeType error_code = GetLastError()) noexcept
+			: RuntimeException(format(message, error_code))
 			, code(error_code)
 		{}
 
 	private:
-		std::wstring format(CodeType code) noexcept
+		std::wstring format(std::wstring message, CodeType code) noexcept
 		{
 			const wchar_t* buffer = nullptr;
 			finally
@@ -68,12 +69,19 @@ namespace tl
 					0,
 					NULL)))
 				return L"Format Error Message Failed.";
-			return buffer;
+			return buffer + message;
 		}
 
 	private:
 		CodeType code = {};
 	};
+
+	constexpr void ThrowWin32ExceptIf(bool condition, std::wstring message)
+	{
+		if (condition)
+			throw Win32Exception(message);
+	}
+
 #endif // TLPP_WIN
 
 } // namespace tl

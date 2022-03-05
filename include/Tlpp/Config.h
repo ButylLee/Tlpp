@@ -25,4 +25,8 @@
 #define TLPP_APPLE
 #endif
 
+#if !defined NDEBUG || defined _DEBUG
+#define TLPP_DEBUG
+#endif
+
 #endif // TLPP_CONFIG_H
