@@ -64,22 +64,22 @@ namespace tl
 		virtual ~Interface() = default;
 	};
 
-	class Error
+	class Error : public Object
 	{
 	public:
 		Error() = default;
 
-		Error(const wchar_t* message_) noexcept
+		explicit Error(const wchar_t* message_) noexcept
 			: message(message_)
 		{}
 
-		[[nodiscard]] const wchar_t* what() const noexcept
+		[[nodiscard]] virtual const wchar_t* what() const noexcept
 		{
 			return message;
 		}
 
 	private:
-		const wchar_t* message = nullptr;
+		const wchar_t* message = L"Unknown Error";
 	};
 
 } // namespace tl

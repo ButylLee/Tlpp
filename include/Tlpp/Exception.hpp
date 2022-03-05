@@ -22,6 +22,10 @@ namespace tl
 	class RuntimeException : public Exception
 	{
 	public:
+		explicit RuntimeException(const wchar_t* message) noexcept
+			: buffer(message)
+		{}
+
 		explicit RuntimeException(std::wstring message) noexcept
 			: buffer(tl::MoveValue(message))
 		{}
@@ -36,7 +40,7 @@ namespace tl
 	};
 
 #ifdef TLPP_WIN
-	class Win32Exception : public Exception
+	class Win32Exception : public Exception // TODO:derived from RuntimeException
 	{
 	public:
 		using CodeType = decltype(GetLastError());
