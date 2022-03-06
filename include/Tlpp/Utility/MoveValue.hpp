@@ -2,6 +2,7 @@
 #define TLPP_UTILITY_MOVE_VALUE_HPP
 
 #include <Tlpp/TypeTraits/conditional.hpp>
+#include <Tlpp/TypeTraits/operation_traits.hpp>
 #include <Tlpp/TypeTraits/ref_traits.hpp>
 
 namespace tl
@@ -16,7 +17,11 @@ namespace tl
 		}
 
 		template<typename T>
-		[[nodiscard]] constexpr type_traits::conditional_t<true, const T&, T&&>//TODO
+		[[nodiscard]] constexpr type_traits::conditional_t<
+			!type_traits::is_nothrow_move_constructible_v<T> &&
+				type_traits::is_copy_constructible_v<T>,
+			const T&,
+			T&&>
 		MoveValueIfNoexcept(T& val) noexcept
 		{
 			return MoveValue(val);

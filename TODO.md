@@ -1,6 +1,7 @@
 # TODO
 
-- impl type_traits then fix ScopeGuard
+- impl nothrow traits 
+- impl type_traits 
 - impl Console
 - impl Test
 - impl string

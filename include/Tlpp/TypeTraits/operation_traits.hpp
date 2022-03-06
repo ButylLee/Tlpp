@@ -14,6 +14,8 @@ namespace tl
 {
 	namespace type_traits
 	{
+		// CONSTRUCTIBLE / ASSIGNABLE TRAITS
+
 #if defined TLPP_MSVC || defined TLPP_GCC || defined TLPP_CLANG
 		template<typename T, typename... Args>
 		inline constexpr bool
@@ -121,6 +123,8 @@ namespace tl
 		struct is_destructible : bool_constant<is_destructible_v<T>>
 		{};
 
+		// TRIVIALLY TRAITS
+
 #if defined TLPP_MSVC || defined TLPP_GCC || defined TLPP_CLANG
 		template<typename T, typename... Args>
 		inline constexpr bool is_trivially_constructible_v =
@@ -216,6 +220,92 @@ namespace tl
 		template<typename T>
 		struct is_trivially_destructible
 			: bool_constant<is_trivially_destructible_v<T>>
+		{};
+
+		// NOTHROW TRAITS
+
+#if defined TLPP_MSVC || defined TLPP_GCC || defined TLPP_CLANG
+		template<typename T, typename... Args>
+		inline constexpr bool
+			is_nothrow_constructible_v = __is_nothrow_constructible(T, Args...);
+#else
+		// TODO
+#endif
+		template<typename T, typename... Args>
+		struct is_nothrow_constructible
+			: bool_constant<is_nothrow_constructible_v<T, Args...>>
+		{};
+
+		template<typename T>
+		inline constexpr bool is_nothrow_default_constructible_v =
+			is_nothrow_constructible_v<T>;
+
+		template<typename T>
+		struct is_nothrow_default_constructible
+			: bool_constant<is_nothrow_default_constructible_v<T>>
+		{};
+
+		template<typename T>
+		inline constexpr bool is_nothrow_copy_constructible_v =
+			is_nothrow_constructible_v<T,
+		                               add_lvalue_reference_t<add_const_t<T>>>;
+
+		template<typename T>
+		struct is_nothrow_copy_constructible
+			: bool_constant<is_nothrow_copy_constructible_v<T>>
+		{};
+
+		template<typename T>
+		inline constexpr bool is_nothrow_move_constructible_v =
+			is_nothrow_constructible_v<T, add_rvalue_reference_t<T>>;
+
+		template<typename T>
+		struct is_nothrow_move_constructible
+			: bool_constant<is_nothrow_move_constructible_v<T>>
+		{};
+
+#if defined TLPP_MSVC || defined TLPP_GCC || defined TLPP_CLANG
+		template<typename T, typename U>
+		inline constexpr bool
+			is_nothrow_assignable_v = __is_nothrow_assignable(T, U);
+#else
+		// TODO
+#endif
+		template<typename T, typename U>
+		struct is_nothrow_assignable
+			: bool_constant<is_nothrow_assignable_v<T, U>>
+		{};
+
+		template<typename T>
+		inline constexpr bool is_nothrow_copy_assignable_v =
+			is_nothrow_assignable_v<add_lvalue_reference_t<T>,
+		                            add_lvalue_reference_t<add_const_t<T>>>;
+
+		template<typename T>
+		struct is_nothrow_copy_assignable
+			: bool_constant<is_nothrow_copy_assignable_v<T>>
+		{};
+
+		template<typename T>
+		inline constexpr bool is_nothrow_move_assignable_v =
+			is_nothrow_assignable_v<add_lvalue_reference_t<T>,
+		                            add_rvalue_reference_t<T>>;
+
+		template<typename T>
+		struct is_nothrow_move_assignable
+			: bool_constant<is_nothrow_move_assignable_v<T>>
+		{};
+
+#if defined TLPP_MSVC || defined TLPP_GCC || defined TLPP_CLANG
+		template<typename T>
+		inline constexpr bool
+			is_nothrow_destructible_v = __is_nothrow_destructible(T);
+#else
+		// TODO
+#endif
+		template<typename T>
+		struct is_nothrow_destructible
+			: bool_constant<is_nothrow_destructible_v<T>>
 		{};
 
 	} // namespace type_traits
