@@ -1,7 +1,6 @@
 ﻿/*
  *         <ScopeGuard>  By James Taylor(ButylLee)
- *                        2022/2/15
- *          https://github.com/ButylLee/ScopeGuard
+ *                        2022/3/6
  * ScopeGuard is a so-called Universal Resource Management
  * Class that employs RAII pattern. It provides a common way
  * of automatically releasing the resource acquired by the
@@ -75,6 +74,7 @@
 #include <Tlpp/Macro.h>
 #include <Tlpp/TypeTraits/decay.hpp>
 #include <Tlpp/TypeTraits/enable_if.hpp>
+#include <Tlpp/TypeTraits/operation_traits.hpp>
 #include <Tlpp/TypeTraits/type_relationships.hpp>
 #include <Tlpp/Utility/DeclVal.hpp>
 #include <Tlpp/Utility/ForwardValue.hpp>
@@ -83,10 +83,9 @@
 #define finally                                                                \
 	auto CONCAT(ScopeGuard_Block_, __LINE__) =                                 \
 		sg::detail::eSgFinally() + [&]() noexcept -> void
+
 #define INVOKE_ON_EXIT(callback)                                               \
 	auto CONCAT(ScopeGuard_, __LINE__) = sg::MakeScopeGuard(callback)
-
-#include <type_traits>
 
 namespace tl
 {
@@ -146,7 +145,7 @@ namespace tl
 				}
 
 				ScopeGuard(ScopeGuard&& other) noexcept(
-					std::is_nothrow_move_constructible_v<Callback>)
+					type_traits::is_nothrow_move_constructible_v<Callback>)
 					: m_callback(MoveValue(other.m_callback))
 					, m_active(MoveValue(other.m_active))
 				{
