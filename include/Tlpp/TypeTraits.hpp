@@ -15,6 +15,7 @@
 #include <Tlpp/TypeTraits/remove_cvref.hpp>
 #include <Tlpp/TypeTraits/sign_traits.hpp>
 #include <Tlpp/TypeTraits/traits_operations.hpp>
+#include <Tlpp/TypeTraits/type_identity.hpp>
 #include <Tlpp/TypeTraits/type_relationships.hpp>
 #include <Tlpp/TypeTraits/void_t.hpp>
 

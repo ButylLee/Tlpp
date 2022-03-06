@@ -308,6 +308,19 @@ namespace tl
 			: bool_constant<is_nothrow_destructible_v<T>>
 		{};
 
+#if defined TLPP_MSVC || defined TLPP_GCC || defined TLPP_CLANG
+		template<typename T>
+		inline constexpr bool
+			has_virtual_destructor_v = __has_virtual_destructor(T);
+#else
+		template<typename T>
+		inline constexpr bool has_virtual_destructor_v = false;
+#endif
+		template<typename T>
+		struct has_virtual_destructor
+			: bool_constant<has_virtual_destructor_v<T>>
+		{};
+
 	} // namespace type_traits
 } // namespace tl
 
