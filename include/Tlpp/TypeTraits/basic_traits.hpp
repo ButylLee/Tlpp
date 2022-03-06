@@ -85,16 +85,15 @@ namespace tl
 #else
 		namespace detail
 		{
+			template<typename T, typename = void>
+			inline constexpr bool is_class_impl = false;
 			template<typename T>
-			void is_class_impl(int T::*);
-			template<typename T>
-			void* is_class_impl(...);
+			inline constexpr bool is_class_impl<T, void_t<int T::*>> = true;
 		} // namespace detail
 
 		template<typename T>
 		inline constexpr bool is_class_v =
-			is_void_v<decltype(detail::is_class_impl<T>(nullptr))> &&
-			!is_union_v<T>;
+			detail::is_class_impl<T> && !is_union_v<T>;
 #endif
 		template<typename T>
 		struct is_class : bool_constant<is_class_v<T>>
