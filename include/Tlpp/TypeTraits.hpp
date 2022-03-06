@@ -9,6 +9,7 @@
 #include <Tlpp/TypeTraits/decay.hpp>
 #include <Tlpp/TypeTraits/enable_if.hpp>
 #include <Tlpp/TypeTraits/integral_constant.hpp>
+#include <Tlpp/TypeTraits/operation_traits.hpp>
 #include <Tlpp/TypeTraits/pointer_traits.hpp>
 #include <Tlpp/TypeTraits/ref_traits.hpp>
 #include <Tlpp/TypeTraits/remove_cvref.hpp>
