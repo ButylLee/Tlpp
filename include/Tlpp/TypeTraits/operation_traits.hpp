@@ -313,12 +313,38 @@ namespace tl
 		inline constexpr bool
 			has_virtual_destructor_v = __has_virtual_destructor(T);
 #else
+#pragma message("Not support has_virtual_destructor traits.")
 		template<typename T>
 		inline constexpr bool has_virtual_destructor_v = false;
 #endif
 		template<typename T>
 		struct has_virtual_destructor
 			: bool_constant<has_virtual_destructor_v<T>>
+		{};
+
+#if defined TLPP_MSVC || defined TLPP_GCC || defined TLPP_CLANG
+		template<typename T>
+		inline constexpr bool
+			is_trivially_copyable_v = __is_trivially_copyable(T);
+#else
+#pragma message("Not support trivially copyable traits.")
+		template<typename T>
+		inline constexpr bool is_trivially_copyable_v = false;
+#endif
+		template<typename T>
+		struct is_trivially_copyable : bool_constant<is_trivially_copyable_v<T>>
+		{};
+
+#if defined TLPP_MSVC || defined TLPP_GCC || defined TLPP_CLANG
+		template<typename T>
+		inline constexpr bool is_trivial_v = __is_trivial(T);
+#else
+		template<typename T>
+		inline constexpr bool is_trivial_v = is_trivially_copyable_v<T>&&
+			is_trivially_default_constructible_v<T>;
+#endif
+		template<typename T>
+		struct is_trivial : bool_constant<is_trivial_v<T>>
 		{};
 
 	} // namespace type_traits
