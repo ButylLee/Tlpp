@@ -11,6 +11,7 @@
 #include <Tlpp/TypeTraits/integral_constant.hpp>
 #include <Tlpp/TypeTraits/operation_traits.hpp>
 #include <Tlpp/TypeTraits/pointer_traits.hpp>
+#include <Tlpp/TypeTraits/properties_traits.hpp>
 #include <Tlpp/TypeTraits/ref_traits.hpp>
 #include <Tlpp/TypeTraits/remove_cvref.hpp>
 #include <Tlpp/TypeTraits/sign_traits.hpp>
