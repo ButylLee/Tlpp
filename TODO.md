@@ -1,7 +1,14 @@
 # TODO
 
+### type_traits
+
 - impl nothrow traits - swappable, nothrow constructible alternative
-- impl type_traits
+- bunch of properties traits
+- is_invocable
+- common_type, common_ref, underlying_type, invoke_result
+
+### other
+
 - impl Console
 - impl Test
 - impl string
