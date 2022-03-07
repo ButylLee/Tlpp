@@ -5,6 +5,8 @@
 #define TLPP_64
 #endif
 
+#ifndef TLPP_TEST_CONFIG
+
 #if defined _MSC_VER
 #define TLPP_MSVC
 #elif defined __clang__
@@ -24,6 +26,8 @@
 #elif defined __APPLE__
 #define TLPP_APPLE
 #endif
+
+#endif // TLPP_TEST_CONFIG
 
 #if !defined NDEBUG || defined _DEBUG
 #define TLPP_DEBUG
