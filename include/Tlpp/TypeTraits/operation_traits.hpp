@@ -113,7 +113,7 @@ namespace tl
 		inline constexpr bool is_destructible_v =
 			!is_function_v<T> &&
 			(is_reference_v<T> ||
-		     is_destructor_wellformed<remove_all_extents_t<T>>);
+		     detail::is_destructor_wellformed<remove_all_extents_t<T>>);
 		template<>
 		inline constexpr bool is_destructible_v<void> = false;
 		template<typename T>
@@ -269,7 +269,15 @@ namespace tl
 		inline constexpr bool
 			is_nothrow_assignable_v = __is_nothrow_assignable(T, U);
 #else
-		// TODO
+		namespace detail
+		{
+			template<typename T, typename U>
+			inline constexpr bool is_nothrow_assignable_impl =
+				noexcept(utility::DeclVal<T>() = utility::DeclVal<U>());
+		}
+		template<typename T, typename U>
+		inline constexpr bool is_nothrow_assignable_v =
+			is_assignable_v<T> && detail::is_nothrow_assignable_impl<T>;
 #endif
 		template<typename T, typename U>
 		struct is_nothrow_assignable
@@ -301,7 +309,15 @@ namespace tl
 		inline constexpr bool
 			is_nothrow_destructible_v = __is_nothrow_destructible(T);
 #else
-		// TODO
+		namespace detail
+		{
+			template<typename T>
+			inline constexpr bool is_nothrow_destructible_impl =
+				noexcept(utility::DeclVal<T>().~T());
+		}
+		template<typename T>
+		inline constexpr bool is_nothrow_destructible_v =
+			is_destructible_v<T> && detail::is_nothrow_destructible_impl<T>;
 #endif
 		template<typename T>
 		struct is_nothrow_destructible
