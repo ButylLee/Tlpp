@@ -1,7 +1,7 @@
 ﻿#ifndef TLPP_CONFIG_H
 #define TLPP_CONFIG_H
 
-#ifdef _WIN64 || __x86_64__ || __LP64__
+#if defined _WIN64 || defined __x86_64__ || defined __LP64__
 #define TLPP_64
 #endif
 
