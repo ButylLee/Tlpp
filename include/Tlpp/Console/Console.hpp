@@ -12,6 +12,7 @@ namespace tl
 	{
 		class Console : Statical
 		{
+			static void Write(const wchar_t* string, tint length);
 			static void Write(const wchar_t* string);
 			static void WriteLine(const wchar_t* string);
 

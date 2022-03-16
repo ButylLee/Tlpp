@@ -1,8 +1,10 @@
 ﻿#ifndef TLPP_CONSOLE_IMPL_HPP
 #define TLPP_CONSOLE_IMPL_HPP
 
-#include <Tlpp/Exception.hpp>
 #include <Tlpp/Config.h>
+#include <Tlpp/Exception.hpp>
+
+#include <cwchar>
 
 #ifdef TLPP_WIN
 #include <Windows.h>
@@ -14,11 +16,55 @@ namespace tl
 {
 	namespace console
 	{
+		inline void Console::Write(const wchar_t* string, tint length)
+		{
+#ifdef TLPP_WIN
+			HANDLE ouput_handle = GetStdHandle(STD_OUTPUT_HANDLE);
+			DWORD written = 0;
+			DWORD mode = 0;
+			if (GetFileType(ouput_handle) & FILE_TYPE_CHAR &&
+			    GetConsoleMode(ouput_handle, &mode))
+			{
+				WriteConsoleW(ouput_handle, string, (DWORD)length, &written, NULL);
+			}
+			else // output_handle has been redirected
+			{
+				auto code_page = GetConsoleOutputCP();
+				int count = WideCharToMultiByte(code_page,
+				                                0,
+				                                string,
+				                                -1,
+				                                NULL,
+				                                0,
+				                                NULL,
+				                                NULL);
+				char* buffer = new char[count];
+				WideCharToMultiByte(code_page,
+				                    0,
+				                    string,
+				                    -1,
+				                    buffer,
+				                    count,
+				                    NULL,
+				                    NULL);
+				WriteFile(ouput_handle, string, length, &written, NULL);
+				delete[] buffer;
+			}
+#else
+			wprintf_s(string);
+#endif
+		}
+
 		inline void Console::Write(const wchar_t* string)
-		{}
+		{
+			Write(string, wcslen(string));
+		}
 
 		inline void Console::WriteLine(const wchar_t* string)
-		{}
+		{
+			Write(string);
+			Write(L"\n");
+		}
 
 		inline std::wstring Console::Read()
 		{}
