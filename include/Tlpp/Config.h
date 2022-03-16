@@ -19,9 +19,9 @@
 #error "Unknown Compiler"
 #endif
 
-#if defined _WIN32 || defined _WIN64
+#if defined WIN32 || defined _WIN32 || defined _WIN64 || defined __MINGW32__
 #define TLPP_WIN
-#elif defined __linux__
+#elif defined linux || defined __linux || defined __linux__
 #define TLPP_LINUX
 #elif defined __APPLE__
 #define TLPP_APPLE
