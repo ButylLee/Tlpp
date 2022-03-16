@@ -3,7 +3,8 @@
 
 #include <Tlpp/TypeTraits/basic_traits.hpp>
 #include <Tlpp/TypeTraits/integral_constant.hpp>
-#include <Tlpp/TypeTraits/voi>
+#include <Tlpp/TypeTraits/void_t.hpp>
+#include <Tlpp/Utility/DeclVal.hpp>
 
 namespace tl
 {
@@ -44,8 +45,7 @@ namespace tl
 		} // namespace detail
 		template<typename Base, typename Derived>
 		inline constexpr bool is_base_of_v = is_class_v<Base> &&
-			is_class_v<Derived> && decltype(detail::is_base_of_impl<Base,
-		                                                           Derived>(
+			is_class_v<Derived> && decltype(detail::is_base_of_impl<Base, Derived>(
 				0))::value;
 #endif
 		template<typename Base, typename Derived>
@@ -61,16 +61,15 @@ namespace tl
 			template<typename From, typename To, typename = void>
 			inline constexpr bool is_convertible_impl = false;
 			template<typename From, typename To>
-			inline constexpr bool is_convertible_impl<
-				From,
-				To,
-				void_t<decltype(utility::DeclVal<void (&)(To)>()(
-					utility::DeclVal<From>()))>> = true;
+			inline constexpr bool
+				is_convertible_impl<From,
+			                        To,
+			                        void_t<decltype(utility::DeclVal<void (&)(To)>()(
+										utility::DeclVal<From>()))>> = true;
 		} // namespace detail
 		template<typename From, typename To>
 		inline constexpr bool is_convertible_v =
-			is_void_t<From> && is_void_t<To> ||
-			detail::is_convertible_impl<From, To>;
+			is_void_t<From> && is_void_t<To> || detail::is_convertible_impl<From, To>;
 #endif
 		template<typename From, typename To>
 		struct is_convertible : bool_constant<is_convertible_v<From, To>>
@@ -79,8 +78,7 @@ namespace tl
 		template<typename From, typename To>
 		inline constexpr bool
 			is_nothrow_convertible_v = is_convertible_v<From, To> && noexcept(
-				utility::DeclVal<void (&)(To) noexcept>()(
-					utility::DeclVal<From>()));
+				utility::DeclVal<void (&)(To) noexcept>()(utility::DeclVal<From>()));
 
 		template<typename From, typename To>
 		struct is_nothrow_convertible

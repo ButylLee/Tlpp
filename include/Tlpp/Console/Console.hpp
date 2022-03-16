@@ -12,6 +12,7 @@ namespace tl
 	{
 		class Console : Statical
 		{
+		public:
 			static void Write(const wchar_t* string, tint length);
 			static void Write(const wchar_t* string);
 			static void WriteLine(const wchar_t* string);
@@ -23,9 +24,9 @@ namespace tl
 			static void SetCursorVisible(bool isVisible);
 
 #ifdef TLPP_WIN
-			static HANDLE GetOutputHandle() noexcept;
-			static HANDLE GetInputHandle() noexcept;
-			static HWND GetConsoleHandle() noexcept;
+			static HANDLE GetOutputHandle();
+			static HANDLE GetInputHandle();
+			static HWND GetConsoleHandle();
 #endif
 		};
 

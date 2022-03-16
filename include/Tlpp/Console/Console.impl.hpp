@@ -132,7 +132,7 @@ namespace tl
 		}
 
 #ifdef TLPP_WIN
-		inline HANDLE Console::GetOutputHandle() noexcept
+		inline HANDLE Console::GetOutputHandle()
 		{
 			static HANDLE handle =
 				GetStdHandle(STD_OUTPUT_HANDLE) != INVALID_HANDLE_VALUE
@@ -141,7 +141,7 @@ namespace tl
 			return handle;
 		}
 
-		inline HANDLE Console::GetInputHandle() noexcept
+		inline HANDLE Console::GetInputHandle()
 		{
 			static HANDLE handle =
 				GetStdHandle(STD_INPUT_HANDLE) != INVALID_HANDLE_VALUE
@@ -150,7 +150,7 @@ namespace tl
 			return handle;
 		}
 
-		inline HWND Console::GetConsoleHandle() noexcept
+		inline HWND Console::GetConsoleHandle()
 		{
 			static HWND hwnd =
 				GetConsoleWindow() != NULL

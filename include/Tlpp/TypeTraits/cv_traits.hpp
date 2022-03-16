@@ -137,8 +137,8 @@ namespace tl
 				using type = const volatile To;
 			};
 
-			template<typename T>
-			using copy_cv_t = typename copy_cv<T>::type;
+			template<typename From, typename To>
+			using copy_cv_t = typename copy_cv<From, To>::type;
 
 		} // namespace detail
 

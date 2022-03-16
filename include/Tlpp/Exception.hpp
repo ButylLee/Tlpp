@@ -43,7 +43,7 @@ namespace tl
 		using CodeType = decltype(GetLastError());
 
 		explicit Win32Exception(CodeType error_code = GetLastError()) noexcept
-			: Win32Exception("", error_code)
+			: Win32Exception(L"", error_code)
 		{}
 
 		explicit Win32Exception(std::wstring message,
@@ -59,7 +59,7 @@ namespace tl
 			finally
 			{
 				LocalFree((HLOCAL)buffer);
-			}
+			};
 			if (!static_cast<bool>(FormatMessageW(
 					FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
 					NULL,
