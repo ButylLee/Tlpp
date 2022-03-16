@@ -10,6 +10,7 @@
 #include <Windows.h>
 #else
 #include <cstdio>
+#include <iostream>
 #endif
 
 namespace tl
@@ -67,7 +68,31 @@ namespace tl
 		}
 
 		inline std::wstring Console::Read()
-		{}
+		{
+#ifdef TLPP_WIN
+			HANDLE input_handle = GetStdHandle(STD_INPUT_HANDLE);
+			std::wstring string;
+			DWORD count = 0;
+			wchar_t ch;
+			while (true)
+			{
+				ReadConsoleW(input_handle, &ch, 1, &count, NULL);
+				if (ch == L'\n')
+				{
+					break;
+				}
+				else
+				{
+					string += ch;
+				}
+			}
+			return string;
+#else
+			std::wstring string;
+			std::getline(std::wcin, string);
+			return string;
+#endif
+		}
 
 		inline void Console::SetTitle(const std::wstring& title)
 		{
