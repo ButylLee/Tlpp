@@ -5,47 +5,63 @@
 #include <Tlpp/Config.h>
 #include <Tlpp/Macro.h>
 
-#include <cstdio>
 // TODO:TEST_ASSERT & TEST_CHECK that throw Error
 namespace tl
 {
 	namespace test
 	{
+		using TestFuncType = void (*)();
+
 		class Test : Statical
 		{
 		public:
-			using TestFuncType = void (*)();
-
 #ifdef TLPP_MSVC
-			static void RunAndDispose(int argc, wchar_t* argv[])
+			static int RunAndDispose(int argc, wchar_t* argv[])
 #else
-			static void RunAndDispose(int argc, char* argv[])
+			static int RunAndDispose(int argc, char* argv[])
 #endif
-			{}
-			static void RegisterTestCase(TestFuncType func)
+			{
+				return 0;
+			}
+
+			static void RegisterTestCase(const wchar_t* file,
+			                             const wchar_t* info,
+			                             bool is_category,
+			                             TestFuncType func)
 			{}
 		};
 
 
-#define TEST(NAME)                                                                  \
-	void CONCAT(test_case_method_, NAME)();                                         \
-	struct CONCAT(test_case_class_, NAME)                                           \
+#define TEST_CATEGORY(INFO)                                                         \
+	void CONCAT(TEST_CATEGORY_FUNC_, __LINE__)();                                   \
+	static ::tl::test::TestCase CONCAT(TEST_CATEGORY_, __LINE__)(                   \
+		WIDEN(__FILE__),                                                            \
+		WIDEN(INFO),                                                                \
+		true,                                                                       \
+		&CONCAT(TEST_CATEGORY_FUNC_, __LINE__));                                    \
+	void CONCAT(TEST_CATEGORY_FUNC_, __LINE__)()
+
+#define TEST_CASE(INFO)                                                             \
+	void CONCAT(TEST_CASE_FUNC_, __LINE__)();                                       \
+	static ::tl::test::TestCase CONCAT(TEST_CASE_, __LINE__)(                       \
+		WIDEN(__FILE__),                                                            \
+		WIDEN(INFO),                                                                \
+		false,                                                                      \
+		&CONCAT(TEST_CASE_FUNC_, __LINE__));                                        \
+	void CONCAT(TEST_CASE_FUNC_, __LINE__)()
+
+#define TEST_ASSERT(STATEMENT)                                                      \
+	do                                                                              \
 	{                                                                               \
-		CONCAT(test_case_class_, NAME)()                                            \
-		{                                                                           \
-			::tl::test::Test::RegisterTestCase(&CONCAT(test_case_method_, NAME));   \
-			printf_s("----------- TEST ");                                          \
-			printf_s(QUOTE(NAME));                                                  \
-			printf_s(" -----------\n");                                             \
-			CONCAT(test_case_method_, NAME)();                                      \
-			printf_s("\n");                                                         \
-		}                                                                           \
-	} CONCAT(test_case_object_, NAME);                                              \
-	void CONCAT(test_case_method_, NAME)()
+		if (!(STATEMENT))                                                           \
+			throw ::tl::test::TestAssertException(                                  \
+				L"Test Assert Failed: " QUOTE(STATEMENT));                          \
+	} while (false)
 
 	} // namespace test
 } // namespace tl
 
-#include <Tlpp/Test/Test.impl.hpp>
+#include <Tlpp/Test/TestTools.hpp>
+#include <Tlpp/Test/impl/Test.impl.hpp>
 
 #endif // TLPP_TEST_HPP
