@@ -21,6 +21,7 @@ namespace tl
 
 			static void SetTitle(const std::wstring& title);
 			static void SetColor(bool red, bool green, bool blue, bool light);
+			static void SetDefaultColor();
 			static void SetCursorVisible(bool isVisible);
 
 #ifdef TLPP_WIN

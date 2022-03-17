@@ -3,30 +3,22 @@
 
 #include <Tlpp/Exception.hpp>
 
-namespace tl
+namespace tl::test
 {
-	namespace test
+	class TestAssertException : public RuntimeException
 	{
-		class TestCase
-		{
-		public:
-			TestCase(const wchar_t* file,
-			         const wchar_t* info,
-			         bool is_category,
-			         TestFuncType func)
-			{
-				Test::RegisterTestCase(file, info, is_category, func);
-			}
-		};
+		TestAssertException(const wchar_t* message)
+			: RuntimeException(message)
+		{}
+	};
 
-		class TestAssertException : public RuntimeException
-		{
-			TestAssertException(const wchar_t* message)
-				: RuntimeException(message)
-			{}
-		};
+	class TestDeployException : public RuntimeException
+	{
+		TestDeployException(const wchar_t* message)
+			: RuntimeException(message)
+		{}
+	};
 
-	} // namespace test
-} // namespace tl
+} // namespace tl::test
 
 #endif // TLPP_TEST_TEST_TOOLS_HPP
