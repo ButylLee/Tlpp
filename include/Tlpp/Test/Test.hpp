@@ -2,6 +2,7 @@
 #define TLPP_TEST_HPP
 
 #include <Tlpp/Basic.hpp>
+#include <Tlpp/Config.h>
 #include <Tlpp/Macro.h>
 
 #include <cstdio>
@@ -10,14 +11,16 @@ namespace tl
 {
 	namespace test
 	{
-		class Test
+		class Test : Statical
 		{
 		public:
-			Test() = delete;
-
 			using TestFuncType = void (*)();
 
+#ifdef TLPP_MSVC
+			static void RunAndDispose(int argc, wchar_t* argv[])
+#else
 			static void RunAndDispose(int argc, char* argv[])
+#endif
 			{}
 			static void RegisterTestCase(TestFuncType func)
 			{}
@@ -42,5 +45,7 @@ namespace tl
 
 	} // namespace test
 } // namespace tl
+
+#include <Tlpp/Test/Test.impl.hpp>
 
 #endif // TLPP_TEST_HPP
