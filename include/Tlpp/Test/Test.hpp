@@ -4,8 +4,11 @@
 #include <Tlpp/Basic.hpp>
 #include <Tlpp/Config.h>
 #include <Tlpp/Macro.h>
+#include <Tlpp/Test/TestException.hpp>
 
-// TODO:TEST_ASSERT & TEST_CHECK that throw Error
+#include <cwchar>
+#include <functional>
+
 namespace tl
 {
 	namespace test
@@ -14,8 +17,73 @@ namespace tl
 
 		enum class InfoType
 		{
+			Regular,
 			Info,
-			Error
+			Error,
+			Category,
+			Case,
+		};
+
+		class TestCategory : Statical
+		{
+		public:
+			struct CategoryNode
+			{
+				const wchar_t* file = nullptr;
+				const wchar_t* info = nullptr;
+				std::function<void()> func;
+				bool standalone_case = false;
+				CategoryNode* next = nullptr;
+			};
+			inline static CategoryNode* category_head = nullptr;
+			inline static CategoryNode** category_tail = &category_head;
+			inline static bool has_run = false;
+
+			static void Register(const wchar_t* file,
+			                     const wchar_t* info,
+			                     std::function<void()> func,
+			                     bool standalone_case = false)
+			{
+				auto* temp = new CategoryNode{file, info, func, standalone_case};
+				*category_tail = temp;
+				category_tail = &temp->next;
+			}
+
+			static void Run()
+			{
+				has_run = true;
+				auto* current = category_head;
+				category_head = nullptr;
+				while (current)
+				{
+					current->func();
+
+					auto* temp = current;
+					current = current->next;
+					delete temp;
+				}
+			}
+		};
+
+		class TestCase : Statical
+		{
+		public:
+			static void
+			Run(const wchar_t* file, const wchar_t* info, TestFuncType func)
+			{
+				if (!TestCategory::has_run)
+				{
+					TestCategory::Register(
+						file,
+						info,
+						[=] { ::tl::test::TestCase::Run(file, info, func); },
+						true);
+				}
+				else
+				{
+					func();
+				}
+			}
 		};
 
 		class Test : Statical
@@ -27,11 +95,6 @@ namespace tl
 			static int RunAndDispose(int argc, char* argv[]);
 #endif
 
-			static void RegisterTestCase(const wchar_t* file,
-			                             const wchar_t* info,
-			                             bool is_category,
-			                             TestFuncType func);
-
 			static void PrintInfo(const wchar_t* info, InfoType type);
 		};
 
@@ -39,10 +102,9 @@ namespace tl
 #define TEST_CATEGORY(INFO)                                                         \
 	void CONCAT(TEST_CATEGORY_FUNC_, __LINE__)();                                   \
 	static const int CONCAT(TEST_CATEGORY_, __LINE__) =                             \
-		(::tl::test::Test::RegisterTestCase(                                        \
+		(::tl::test::TestCategory::Register(                                        \
 			 WIDEN(__FILE__),                                                       \
 			 WIDEN(INFO),                                                           \
-			 true,                                                                  \
 			 &CONCAT(TEST_CATEGORY_FUNC_, __LINE__)),                               \
 	     0);                                                                        \
 	void CONCAT(TEST_CATEGORY_FUNC_, __LINE__)()
@@ -50,10 +112,9 @@ namespace tl
 #define TEST_CASE(INFO)                                                             \
 	void CONCAT(TEST_CASE_FUNC_, __LINE__)();                                       \
 	static const int CONCAT(TEST_CASE_, __LINE__) =                                 \
-		(::tl::test::Test::RegisterTestCase(WIDEN(__FILE__),                        \
-	                                        WIDEN(INFO),                            \
-	                                        false,                                  \
-	                                        &CONCAT(TEST_CASE_FUNC_, __LINE__)),    \
+		(::tl::test::TestCase::Run(WIDEN(__FILE__),                                 \
+	                               WIDEN(INFO),                                     \
+	                               &CONCAT(TEST_CASE_FUNC_, __LINE__)),             \
 	     0);                                                                        \
 	void CONCAT(TEST_CASE_FUNC_, __LINE__)()
 
@@ -71,7 +132,6 @@ namespace tl
 	} // namespace test
 } // namespace tl
 
-#include <Tlpp/Test/TestTools.hpp>
 #include <Tlpp/Test/impl/Test.impl.hpp>
 
 #endif // TLPP_TEST_HPP

@@ -1,5 +1,5 @@
-﻿#ifndef TLPP_TEST_TEST_TOOLS_HPP
-#define TLPP_TEST_TEST_TOOLS_HPP
+﻿#ifndef TLPP_TEST_TEST_EXCEPTION_HPP
+#define TLPP_TEST_TEST_EXCEPTION_HPP
 
 #include <Tlpp/Exception.hpp>
 
@@ -21,4 +21,4 @@ namespace tl::test
 
 } // namespace tl::test
 
-#endif // TLPP_TEST_TEST_TOOLS_HPP
+#endif // TLPP_TEST_TEST_EXCEPTION_HPP
