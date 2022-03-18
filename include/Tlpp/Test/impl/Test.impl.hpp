@@ -22,7 +22,6 @@ namespace tl::test
 		has_run = true;
 		auto* current = category_head;
 		category_head = nullptr;
-		category_tail = nullptr;
 		while (current)
 		{
 			current->func();
@@ -33,14 +32,14 @@ namespace tl::test
 		}
 	}
 
-	inline TestInfo
+	inline TestCategory::TestInfo
 	TestCategory::Register(const wchar_t* file, const wchar_t* message)
 	{
 		return {file, message};
 	}
 
 	template<typename TCallback>
-	inline int operator+(TestInfo info, TCallback callback)
+	inline int operator+(TestCategory::TestInfo info, TCallback callback)
 	{
 		::tl::test::TestCategory::Register(info.file, info.message, callback);
 		return 1;
@@ -63,12 +62,13 @@ namespace tl::test
 		}
 	}
 
-	inline TestInfo TestCase::Register(const wchar_t* file, const wchar_t* message)
+	inline TestCase::TestInfo
+	TestCase::Register(const wchar_t* file, const wchar_t* message)
 	{
 		return {file, message};
 	}
 
-	inline int operator+(TestInfo info, TestCase::TestFuncType func)
+	inline int operator+(TestCase::TestInfo info, TestCase::TestFuncType func)
 	{
 		::tl::test::TestCase::Run(info.file, info.message, func);
 		return 1;

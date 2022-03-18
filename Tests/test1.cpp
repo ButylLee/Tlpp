@@ -18,4 +18,16 @@ TEST_CATEGORY("category2")
 	{
 		TEST_PRINT(L"print3");
 	};
+	TEST_CATEGORY("category2-1")
+	{
+		TEST_CASE("case4")
+		{
+			TEST_PRINT(L"print4");
+		};
+	};
+};
+
+TEST_CASE("case5")
+{
+	TEST_PRINT(L"print5");
 };

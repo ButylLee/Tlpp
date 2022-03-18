@@ -21,12 +21,6 @@ namespace tl
 			Case,
 		};
 
-		struct TestInfo
-		{
-			const wchar_t* file = nullptr;
-			const wchar_t* message = nullptr;
-		};
-
 		class TestCategory : Statical
 		{
 		public:
@@ -38,6 +32,11 @@ namespace tl
 				bool standalone_case = false;
 				CategoryNode* next = nullptr;
 			};
+			struct TestInfo
+			{
+				const wchar_t* file = nullptr;
+				const wchar_t* message = nullptr;
+			};
 			inline static bool has_run = false;
 
 			static void Register(const wchar_t* file,
@@ -47,8 +46,8 @@ namespace tl
 
 			static void Run();
 
+			// Used in macro TEST_CATEGORY
 			static TestInfo Register(const wchar_t* file, const wchar_t* message);
-
 			template<typename TCallback>
 			friend int operator+(TestInfo info, TCallback callback);
 
@@ -61,12 +60,17 @@ namespace tl
 		{
 		public:
 			using TestFuncType = void (*)();
+			struct TestInfo
+			{
+				const wchar_t* file = nullptr;
+				const wchar_t* message = nullptr;
+			};
 
 			static void
 			Run(const wchar_t* file, const wchar_t* message, TestFuncType func);
 
+			// Used in macro TEST_CASE
 			static TestInfo Register(const wchar_t* file, const wchar_t* message);
-
 			friend int operator+(TestInfo info, TestFuncType func);
 		};
 
