@@ -6,16 +6,13 @@
 #include <Tlpp/Macro.h>
 #include <Tlpp/Test/TestException.hpp>
 
-#include <cwchar>
 #include <functional>
 
 namespace tl
 {
 	namespace test
 	{
-		using TestFuncType = void (*)();
-
-		enum class InfoType
+		enum class MsgType
 		{
 			Regular,
 			Info,
@@ -24,66 +21,53 @@ namespace tl
 			Case,
 		};
 
+		struct TestInfo
+		{
+			const wchar_t* file = nullptr;
+			const wchar_t* message = nullptr;
+		};
+
 		class TestCategory : Statical
 		{
 		public:
 			struct CategoryNode
 			{
 				const wchar_t* file = nullptr;
-				const wchar_t* info = nullptr;
+				const wchar_t* message = nullptr;
 				std::function<void()> func;
 				bool standalone_case = false;
 				CategoryNode* next = nullptr;
 			};
-			inline static CategoryNode* category_head = nullptr;
-			inline static CategoryNode** category_tail = &category_head;
 			inline static bool has_run = false;
 
 			static void Register(const wchar_t* file,
-			                     const wchar_t* info,
+			                     const wchar_t* message,
 			                     std::function<void()> func,
-			                     bool standalone_case = false)
-			{
-				auto* temp = new CategoryNode{file, info, func, standalone_case};
-				*category_tail = temp;
-				category_tail = &temp->next;
-			}
+			                     bool standalone_case = false);
 
-			static void Run()
-			{
-				has_run = true;
-				auto* current = category_head;
-				category_head = nullptr;
-				while (current)
-				{
-					current->func();
+			static void Run();
 
-					auto* temp = current;
-					current = current->next;
-					delete temp;
-				}
-			}
+			static TestInfo Register(const wchar_t* file, const wchar_t* message);
+
+			template<typename TCallback>
+			friend int operator+(TestInfo info, TCallback callback);
+
+		private:
+			inline static CategoryNode* category_head = nullptr;
+			inline static CategoryNode** category_tail = &category_head;
 		};
 
 		class TestCase : Statical
 		{
 		public:
+			using TestFuncType = void (*)();
+
 			static void
-			Run(const wchar_t* file, const wchar_t* info, TestFuncType func)
-			{
-				if (!TestCategory::has_run)
-				{
-					TestCategory::Register(
-						file,
-						info,
-						[=] { ::tl::test::TestCase::Run(file, info, func); },
-						true);
-				}
-				else
-				{
-					func();
-				}
-			}
+			Run(const wchar_t* file, const wchar_t* message, TestFuncType func);
+
+			static TestInfo Register(const wchar_t* file, const wchar_t* message);
+
+			friend int operator+(TestInfo info, TestFuncType func);
 		};
 
 		class Test : Statical
@@ -95,28 +79,22 @@ namespace tl
 			static int RunAndDispose(int argc, char* argv[]);
 #endif
 
-			static void PrintInfo(const wchar_t* info, InfoType type);
+			static void PrintMessage(const wchar_t* message, MsgType type);
 		};
 
 
 #define TEST_CATEGORY(INFO)                                                         \
-	void CONCAT(TEST_CATEGORY_FUNC_, __LINE__)();                                   \
 	static const int CONCAT(TEST_CATEGORY_, __LINE__) =                             \
-		(::tl::test::TestCategory::Register(                                        \
-			 WIDEN(__FILE__),                                                       \
-			 WIDEN(INFO),                                                           \
-			 &CONCAT(TEST_CATEGORY_FUNC_, __LINE__)),                               \
-	     0);                                                                        \
-	void CONCAT(TEST_CATEGORY_FUNC_, __LINE__)()
+		::tl::test::TestCategory::Register(                                         \
+			WIDEN(__FILE__ ": line " QUOTE(__LINE__)),                              \
+			WIDEN(INFO)) +                                                          \
+		[]() -> void
 
 #define TEST_CASE(INFO)                                                             \
-	void CONCAT(TEST_CASE_FUNC_, __LINE__)();                                       \
 	static const int CONCAT(TEST_CASE_, __LINE__) =                                 \
-		(::tl::test::TestCase::Run(WIDEN(__FILE__),                                 \
-	                               WIDEN(INFO),                                     \
-	                               &CONCAT(TEST_CASE_FUNC_, __LINE__)),             \
-	     0);                                                                        \
-	void CONCAT(TEST_CASE_FUNC_, __LINE__)()
+		::tl::test::TestCase::Register(WIDEN(__FILE__ ": line " QUOTE(__LINE__)),   \
+	                                   WIDEN(INFO)) +                               \
+		[]() -> void
 
 #define TEST_ASSERT(STATEMENT)                                                      \
 	do                                                                              \
@@ -127,7 +105,7 @@ namespace tl
 	} while (false)
 
 #define TEST_PRINT(INFO)                                                            \
-	::tl::test::Test::PrintInfo((INFO), tl::test::InfoType::Info)
+	::tl::test::Test::PrintMessage((INFO), tl::test::MsgType::Info)
 
 	} // namespace test
 } // namespace tl

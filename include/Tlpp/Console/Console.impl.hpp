@@ -97,8 +97,6 @@ namespace tl::console
 		color |= light ? FOREGROUND_INTENSITY : 0;
 		if (!SetConsoleTextAttribute(GetOutputHandle(), color))
 			throw Win32Exception{};
-		if (!SetConsoleTextAttribute(GetInputHandle(), color))
-			throw Win32Exception{};
 #else
 
 #endif
