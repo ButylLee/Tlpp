@@ -7,6 +7,7 @@
 #include <Tlpp/Test/TestException.hpp>
 
 #include <functional>
+#include <string>
 
 namespace tl
 {
@@ -37,14 +38,14 @@ namespace tl
 				const wchar_t* file = nullptr;
 				const wchar_t* message = nullptr;
 			};
-			inline static const bool has_run = false;
+			inline static bool has_run = false;
 
 			static void Register(const wchar_t* file,
 			                     const wchar_t* message,
 			                     std::function<void()> func,
 			                     bool standalone_case = false);
 
-			static void Run();
+			static int Run();
 
 			// Used in macro TEST_CATEGORY
 			static TestInfo Register(const wchar_t* file, const wchar_t* message);
@@ -60,6 +61,8 @@ namespace tl
 
 		class TestCase : Statical
 		{
+			friend class TestCategory;
+
 		public:
 			using TestFuncType = void (*)();
 			struct TestInfo
@@ -90,9 +93,9 @@ namespace tl
 #else
 			static int RunAndDispose(int argc, char* argv[]);
 #endif
-			static void PrintMessage(const wchar_t* message, MsgType type);
+			static void PrintMessage(std::wstring message, MsgType type);
 
-			inline static const bool suppress_failure = true;
+			inline static bool suppress_failure = true;
 		};
 
 

@@ -46,7 +46,18 @@ namespace tl::console
 		Write(string, wcslen(string));
 	}
 
+	inline void Console::Write(std::wstring string)
+	{
+		Write(string.c_str(), string.size());
+	}
+
 	inline void Console::WriteLine(const wchar_t* string)
+	{
+		Write(string);
+		Write(L"\n");
+	}
+
+	inline void Console::WriteLine(std::wstring string)
 	{
 		Write(string);
 		Write(L"\n");

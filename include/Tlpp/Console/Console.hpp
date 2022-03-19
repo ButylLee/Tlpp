@@ -15,7 +15,9 @@ namespace tl
 		public:
 			static void Write(const wchar_t* string, tint length);
 			static void Write(const wchar_t* string);
+			static void Write(std::wstring string);
 			static void WriteLine(const wchar_t* string);
+			static void WriteLine(std::wstring string);
 
 			static std::wstring Read();
 

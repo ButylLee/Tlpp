@@ -7,6 +7,7 @@
 #include <Tlpp/Test/TestException.hpp>
 
 #include <cwchar>
+#include <string> //TODO:remove
 
 namespace tl::test
 {
@@ -20,9 +21,9 @@ namespace tl::test
 		category_tail = &temp->next;
 	}
 
-	inline void TestCategory::Run()
+	inline int TestCategory::Run()
 	{
-		const_cast<bool&>(has_run) = true;
+		has_run = true;
 		auto* current = category_head;
 		category_head = nullptr;
 		while (current)
@@ -33,6 +34,21 @@ namespace tl::test
 			current = current->next;
 			delete temp;
 		}
+
+		bool is_passed = passed_files == total_files;
+		MsgType msg_type = is_passed ? MsgType::Case : MsgType::Error;
+		Test::PrintMessage(L"-------------------------", MsgType::Regular);
+		Test::PrintMessage(
+			L" Test File: " + std::to_wstring(TestCategory::passed_files) + L"/" +
+				std::to_wstring(TestCategory::total_files) + L" passed",
+			msg_type);
+		Test::PrintMessage(L"-------------------------", MsgType::Regular);
+		Test::PrintMessage(L" Test Case: " +
+		                       std::to_wstring(TestCase::passed_cases) + L"/" +
+		                       std::to_wstring(TestCase::total_cases) + L" passed",
+		                   msg_type);
+		Test::PrintMessage(L"-------------------------", MsgType::Regular);
+		return is_passed ? 0 : 1;
 	}
 
 	inline TestCategory::TestInfo
@@ -119,11 +135,33 @@ namespace tl::test
 	inline int Test::RunAndDispose(int argc, char* argv[])
 #endif
 	{
-		TestCategory::Run();
-		return 0;
+		do
+		{
+			if (argc <= 2)
+			{
+				if (argc == 2)
+				{
+#ifdef TLPP_MSVC
+					std::wstring cmd = argv[1];
+#else
+					// TODO
+#endif
+					if (cmd == L"-D")
+					{
+						Test::suppress_failure = false;
+						Test::PrintMessage(L"Debug Mode is on.", MsgType::Info);
+					}
+					else
+						break;
+				}
+				return TestCategory::Run();
+			}
+		} while (false);
+		Test::PrintMessage(L"Command: [-D]", MsgType::Error);
+		return 1;
 	}
 
-	inline void Test::PrintMessage(const wchar_t* info, MsgType type)
+	inline void Test::PrintMessage(std::wstring info, MsgType type)
 	{
 		using namespace console;
 		using enum MsgType;
