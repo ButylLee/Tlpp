@@ -21,8 +21,7 @@ namespace tl
 		} // namespace detail
 
 		template<typename T>
-		inline constexpr bool is_pointer_v =
-			detail::is_pointer_impl<remove_cv_t<T>>;
+		inline constexpr bool is_pointer_v = detail::is_pointer_impl<remove_cv_t<T>>;
 
 		template<typename T>
 		struct is_pointer : bool_constant<is_pointer_v<T>>

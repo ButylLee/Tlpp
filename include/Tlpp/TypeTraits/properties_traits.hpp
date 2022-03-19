@@ -15,8 +15,8 @@ namespace tl
 		inline constexpr bool is_trivial_v = __is_trivial(T);
 #else
 		template<typename T>
-		inline constexpr bool is_trivial_v = is_trivially_copyable_v<T>&&
-			is_trivially_default_constructible_v<T>;
+		inline constexpr bool is_trivial_v =
+			is_trivially_copyable_v<T> && is_trivially_default_constructible_v<T>;
 #endif
 		template<typename T>
 		struct is_trivial : bool_constant<is_trivial_v<T>>

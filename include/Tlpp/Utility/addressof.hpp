@@ -8,8 +8,8 @@ namespace tl
 		template<typename T>
 		constexpr T* AddressOf(T& arg) noexcept
 		{
-			return reinterpret_cast<T*>(&const_cast<char&>(
-				reinterpret_cast<const volatile char&>(arg)));
+			return reinterpret_cast<T*>(
+				&const_cast<char&>(reinterpret_cast<const volatile char&>(arg)));
 		}
 
 		template<typename T>

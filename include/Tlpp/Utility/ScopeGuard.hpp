@@ -80,11 +80,11 @@
 #include <Tlpp/Utility/ForwardValue.hpp>
 #include <Tlpp/Utility/MoveValue.hpp>
 
-#define finally                                                                \
-	auto CONCAT(ScopeGuard_Block_, __LINE__) =                                 \
+#define finally                                                                     \
+	auto CONCAT(ScopeGuard_Block_, __LINE__) =                                      \
 		sg::detail::eSgFinally() + [&]() noexcept -> void
 
-#define INVOKE_ON_EXIT(callback)                                               \
+#define INVOKE_ON_EXIT(callback)                                                    \
 	auto CONCAT(ScopeGuard_, __LINE__) = sg::MakeScopeGuard(callback)
 
 namespace tl
@@ -100,8 +100,8 @@ namespace tl
 				type_traits::is_same_v<void, decltype(utility::DeclVal<T>()())>;
 
 			template<typename TCallback,
-			         typename = type_traits::enable_if_t<
-						 is_proper_callback_v<TCallback>>>
+			         typename =
+			             type_traits::enable_if_t<is_proper_callback_v<TCallback>>>
 			class ScopeGuard;
 
 			/* --- The helper functions provided multiple usages --- */

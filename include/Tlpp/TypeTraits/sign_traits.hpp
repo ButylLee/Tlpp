@@ -61,10 +61,9 @@ namespace tl
 			template<size_t S, typename T, typename... Ts>
 			struct apply_first_type_of_size
 			{
-				using type =
-					conditional_t<sizeof(T) < S,
-				                  apply_first_type_of_size<S, Ts...>::type,
-				                  T>;
+				using type = conditional_t<sizeof(T) < S,
+				                           apply_first_type_of_size<S, Ts...>::type,
+				                           T>;
 			};
 
 			template<size_t S, typename T>
@@ -73,8 +72,7 @@ namespace tl
 				using type = T;
 			};
 
-			template<typename T,
-			         bool = is_integral_except_bool_v<T> || is_enum_v<T>>
+			template<typename T, bool = is_integral_except_bool_v<T> || is_enum_v<T>>
 			struct make_signed_impl;
 
 			template<typename T>
@@ -148,8 +146,7 @@ namespace tl
 				using type = signed long long;
 			};
 
-			template<typename T,
-			         bool = is_integral_except_bool_v<T> || is_enum_v<T>>
+			template<typename T, bool = is_integral_except_bool_v<T> || is_enum_v<T>>
 			struct make_unsigned_impl;
 
 			template<typename T>
@@ -231,8 +228,8 @@ namespace tl
 			static_assert(detail::is_integral_except_bool_v<T> || is_enum_v<T>,
 			              "make_signed<T> requires an integral type except "
 			              "bool or an enum type which may cv-qualified.");
-			using type = detail::
-				copy_cv_t<T, detail::make_signed_impl<remove_cv_t<T>>::type>;
+			using type =
+				detail::copy_cv_t<T, detail::make_signed_impl<remove_cv_t<T>>::type>;
 		};
 
 		template<typename T>
@@ -244,8 +241,9 @@ namespace tl
 			static_assert(detail::is_integral_except_bool_v<T> || is_enum_v<T>,
 			              "make_signed<T> requires an integral type except "
 			              "bool or an enum type which may cv-qualified.");
-			using type = detail::
-				copy_cv_t<T, detail::make_unsigned_impl<remove_cv_t<T>>::type>;
+			using type =
+				detail::copy_cv_t<T,
+			                      detail::make_unsigned_impl<remove_cv_t<T>>::type>;
 		};
 
 		template<typename T>

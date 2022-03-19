@@ -18,8 +18,7 @@ namespace tl
 
 #if defined TLPP_MSVC || defined TLPP_GCC || defined TLPP_CLANG
 		template<typename T, typename... Args>
-		inline constexpr bool
-			is_constructible_v = __is_constructible(T, Args...);
+		inline constexpr bool is_constructible_v = __is_constructible(T, Args...);
 #else
 #pragma message("Not support constructible traits.")
 		template<typename T, typename... Args>
@@ -30,8 +29,7 @@ namespace tl
 		{};
 
 		template<typename T>
-		inline constexpr bool is_default_constructible_v =
-			is_constructible_v<T>;
+		inline constexpr bool is_default_constructible_v = is_constructible_v<T>;
 
 		template<typename T>
 		struct is_default_constructible
@@ -66,8 +64,8 @@ namespace tl
 			inline constexpr bool is_assignable_impl<
 				T,
 				U,
-				void_t<decltype((utility::DeclVal<T>() =
-			                         utility::DeclVal<U>()))>> = true;
+				void_t<decltype((utility::DeclVal<T>() = utility::DeclVal<U>()))>> =
+				true;
 		} // namespace detail
 
 		template<typename T, typename U>
@@ -89,8 +87,7 @@ namespace tl
 
 		template<typename T>
 		inline constexpr bool is_move_assignable_v =
-			is_assignable_v<add_lvalue_reference_t<T>,
-		                    add_rvalue_reference_t<T>>;
+			is_assignable_v<add_lvalue_reference_t<T>, add_rvalue_reference_t<T>>;
 
 		template<typename T>
 		struct is_move_assignable : bool_constant<is_move_assignable_v<T>>
@@ -127,8 +124,8 @@ namespace tl
 
 #if defined TLPP_MSVC || defined TLPP_GCC || defined TLPP_CLANG
 		template<typename T, typename... Args>
-		inline constexpr bool is_trivially_constructible_v =
-			__is_trivially_constructible(T, Args...);
+		inline constexpr bool
+			is_trivially_constructible_v = __is_trivially_constructible(T, Args...);
 #else
 #pragma message("Not support trivially constructible traits.")
 		template<typename T, typename... Args>
@@ -150,9 +147,7 @@ namespace tl
 
 		template<typename T>
 		inline constexpr bool is_trivially_copy_constructible_v =
-			is_trivially_constructible_v<
-				T,
-				add_lvalue_reference_t<add_const_t<T>>>;
+			is_trivially_constructible_v<T, add_lvalue_reference_t<add_const_t<T>>>;
 
 		template<typename T>
 		struct is_trivially_copy_constructible
@@ -247,8 +242,7 @@ namespace tl
 
 		template<typename T>
 		inline constexpr bool is_nothrow_copy_constructible_v =
-			is_nothrow_constructible_v<T,
-		                               add_lvalue_reference_t<add_const_t<T>>>;
+			is_nothrow_constructible_v<T, add_lvalue_reference_t<add_const_t<T>>>;
 
 		template<typename T>
 		struct is_nothrow_copy_constructible
@@ -280,8 +274,7 @@ namespace tl
 			is_assignable_v<T> && detail::is_nothrow_assignable_impl<T>;
 #endif
 		template<typename T, typename U>
-		struct is_nothrow_assignable
-			: bool_constant<is_nothrow_assignable_v<T, U>>
+		struct is_nothrow_assignable : bool_constant<is_nothrow_assignable_v<T, U>>
 		{};
 
 		template<typename T>
@@ -312,36 +305,32 @@ namespace tl
 		namespace detail
 		{
 			template<typename T>
-			inline constexpr bool is_nothrow_destructible_impl =
-				noexcept(utility::DeclVal<T>().~T());
+			inline constexpr bool
+				is_nothrow_destructible_impl = noexcept(utility::DeclVal<T>().~T());
 		}
 		template<typename T>
 		inline constexpr bool is_nothrow_destructible_v =
 			is_destructible_v<T> && detail::is_nothrow_destructible_impl<T>;
 #endif
 		template<typename T>
-		struct is_nothrow_destructible
-			: bool_constant<is_nothrow_destructible_v<T>>
+		struct is_nothrow_destructible : bool_constant<is_nothrow_destructible_v<T>>
 		{};
 
 #if defined TLPP_MSVC || defined TLPP_GCC || defined TLPP_CLANG
 		template<typename T>
-		inline constexpr bool
-			has_virtual_destructor_v = __has_virtual_destructor(T);
+		inline constexpr bool has_virtual_destructor_v = __has_virtual_destructor(T);
 #else
 #pragma message("Not support has_virtual_destructor traits.")
 		template<typename T>
 		inline constexpr bool has_virtual_destructor_v = false;
 #endif
 		template<typename T>
-		struct has_virtual_destructor
-			: bool_constant<has_virtual_destructor_v<T>>
+		struct has_virtual_destructor : bool_constant<has_virtual_destructor_v<T>>
 		{};
 
 #if defined TLPP_MSVC || defined TLPP_GCC || defined TLPP_CLANG
 		template<typename T>
-		inline constexpr bool
-			is_trivially_copyable_v = __is_trivially_copyable(T);
+		inline constexpr bool is_trivially_copyable_v = __is_trivially_copyable(T);
 #else
 #pragma message("Not support trivially copyable traits.")
 		template<typename T>
