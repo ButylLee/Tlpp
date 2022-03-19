@@ -1,7 +1,10 @@
 ﻿#ifndef TLPP_TEST_IMPL_HPP
 #define TLPP_TEST_IMPL_HPP
 
+#include <Tlpp/Basic.hpp>
 #include <Tlpp/Console/Console.hpp>
+#include <Tlpp/Exception.hpp>
+#include <Tlpp/Test/TestException.hpp>
 
 #include <cwchar>
 
@@ -19,7 +22,7 @@ namespace tl::test
 
 	inline void TestCategory::Run()
 	{
-		has_run = true;
+		const_cast<bool&>(has_run) = true;
 		auto* current = category_head;
 		category_head = nullptr;
 		while (current)
@@ -50,16 +53,52 @@ namespace tl::test
 	{
 		if (!TestCategory::has_run)
 		{
+			// wrap single test case as a category
 			TestCategory::Register(
 				file,
 				message,
 				[=] { ::tl::test::TestCase::Run(file, message, func); },
 				true);
 		}
-		else
+		else // run the test case
 		{
-			func();
+			if (Test::suppress_failure)
+			{
+				try
+				{
+					func();
+				}
+				catch (const TestAssertException& e)
+				{
+					RecordFailure(e.what());
+				}
+				catch (const TestDeployException& e)
+				{
+					RecordFailure(e.what());
+				}
+				catch (const Error& e)
+				{
+					RecordFailure(e.what());
+				}
+				catch (const Exception& e)
+				{
+					RecordFailure(e.what());
+				}
+				catch (...)
+				{
+					RecordFailure(L"Unknown Test Failure occurred.");
+				}
+			}
+			else
+			{
+				func();
+			}
 		}
+	}
+
+	inline void TestCase::RecordFailure(const wchar_t* message)
+	{
+		Test::PrintMessage(message, MsgType::Error);
 	}
 
 	inline TestCase::TestInfo

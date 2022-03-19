@@ -37,7 +37,7 @@ namespace tl
 				const wchar_t* file = nullptr;
 				const wchar_t* message = nullptr;
 			};
-			inline static bool has_run = false;
+			inline static const bool has_run = false;
 
 			static void Register(const wchar_t* file,
 			                     const wchar_t* message,
@@ -54,6 +54,8 @@ namespace tl
 		private:
 			inline static CategoryNode* category_head = nullptr;
 			inline static CategoryNode** category_tail = &category_head;
+			inline static tint passed_files = 0;
+			inline static tint total_files = 0;
 		};
 
 		class TestCase : Statical
@@ -69,9 +71,15 @@ namespace tl
 			static void
 			Run(const wchar_t* file, const wchar_t* message, TestFuncType func);
 
+			static void RecordFailure(const wchar_t* message);
+
 			// Used in macro TEST_CASE
 			static TestInfo Register(const wchar_t* file, const wchar_t* message);
 			friend int operator+(TestInfo info, TestFuncType func);
+
+		private:
+			inline static tint passed_cases = 0;
+			inline static tint total_cases = 0;
 		};
 
 		class Test : Statical
@@ -82,22 +90,21 @@ namespace tl
 #else
 			static int RunAndDispose(int argc, char* argv[]);
 #endif
-
 			static void PrintMessage(const wchar_t* message, MsgType type);
+
+			inline static const bool suppress_failure = true;
 		};
 
 
 #define TEST_CATEGORY(INFO)                                                         \
 	static const int CONCAT(TEST_CATEGORY_, __LINE__) =                             \
-		::tl::test::TestCategory::Register(                                         \
-			WIDEN(__FILE__ ": line " QUOTE(__LINE__)),                              \
-			WIDEN(INFO)) +                                                          \
+		::tl::test::TestCategory::Register(WIDEN(__FILE__), WIDEN(INFO)) +          \
 		[]() -> void
 
 #define TEST_CASE(INFO)                                                             \
 	static const int CONCAT(TEST_CASE_, __LINE__) =                                 \
-		::tl::test::TestCase::Register(WIDEN(__FILE__ ": line " QUOTE(__LINE__)),   \
-	                                   WIDEN(INFO)) +                               \
+		::tl::test::TestCase::Register(WIDEN(__FILE__),                             \
+	                                   WIDEN("line " QUOTE(__LINE__) ":" INFO)) +   \
 		[]() -> void
 
 #define TEST_ASSERT(STATEMENT)                                                      \
